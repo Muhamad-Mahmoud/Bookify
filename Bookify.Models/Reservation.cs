@@ -33,6 +33,7 @@ namespace Bookify.Models
         [Required(ErrorMessage = "Check-out date is required")]
         [DataType(DataType.Date)]
         [Display(Name = "Check-out Date")]
+        [Compare(nameof(CheckInDate), ErrorMessage = "Check-out date must be after check-in date")]
         public DateTime CheckOutDate { get; set; }
 
         [Required(ErrorMessage = "Total price is required")]

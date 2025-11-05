@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36203.30
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.PL", "Bookify\Bookify.PL.csproj", "{3810090F-AA98-4A75-82A8-60DA629259B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.PL", "Bookify.PL\Bookify.PL.csproj", "{3810090F-AA98-4A75-82A8-60DA629259B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.DL", "Bookify.DataAccess\Bookify.DL.csproj", "{33577DF4-E574-46D3-8B79-2E9E90001F0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.DL", "Bookify.DL\Bookify.DL.csproj", "{33577DF4-E574-46D3-8B79-2E9E90001F0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.Models", "Bookify.Models\Bookify.Models.csproj", "{E7661B2E-D7F3-4783-89B2-68449B58A80A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.BL", "Bookify.BL\Bookify.BL.csproj", "{54A78DA7-A564-4CE6-8631-06CAE7C3EA5B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.BL", "Bookify.BL\Bookify.Services.csproj", "{54A78DA7-A564-4CE6-8631-06CAE7C3EA5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

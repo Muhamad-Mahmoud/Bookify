@@ -6,6 +6,7 @@ C:\Users\Muhammad\source\repos\Bookify\Bookify.Models\obj\Debug\net9.0\Bookify.M
 C:\Users\Muhammad\source\repos\Bookify\Bookify.Models\obj\Debug\net9.0\Bookify.Models.AssemblyInfoInputs.cache
 C:\Users\Muhammad\source\repos\Bookify\Bookify.Models\obj\Debug\net9.0\Bookify.Models.AssemblyInfo.cs
 C:\Users\Muhammad\source\repos\Bookify\Bookify.Models\obj\Debug\net9.0\Bookify.Models.csproj.CoreCompileInputs.cache
+C:\Users\Muhammad\source\repos\Bookify\Bookify.Models\obj\Debug\net9.0\Bookify.Models.sourcelink.json
 C:\Users\Muhammad\source\repos\Bookify\Bookify.Models\obj\Debug\net9.0\Bookify.Models.dll
 C:\Users\Muhammad\source\repos\Bookify\Bookify.Models\obj\Debug\net9.0\refint\Bookify.Models.dll
 C:\Users\Muhammad\source\repos\Bookify\Bookify.Models\obj\Debug\net9.0\Bookify.Models.pdb

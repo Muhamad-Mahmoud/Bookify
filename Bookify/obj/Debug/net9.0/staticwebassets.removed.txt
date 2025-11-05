@@ -1,2 +1,0 @@
-C:\Users\Muhammad\source\repos\Bookify\Bookify\wwwroot\css\new_identity.css
-C:\Users\Muhammad\source\repos\Bookify\Bookify\wwwroot\css\identity.css
