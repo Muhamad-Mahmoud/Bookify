@@ -5,7 +5,6 @@ using Bookify.DL.Data;
 using Bookify.DL.Repository;
 using Bookify.DL.Repository.IRepository;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Bookify.BL.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<BookifyDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
