@@ -27,7 +27,6 @@ builder.Services.AddIdentity<Customer, IdentityRole>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 // Configure Identity options
 builder.Services.Configure<IdentityOptions>(options =>
