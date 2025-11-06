@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.DL", "Bookify.DL\Bo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.Models", "Bookify.Models\Bookify.Models.csproj", "{E7661B2E-D7F3-4783-89B2-68449B58A80A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.BL", "Bookify.BL\Bookify.Services.csproj", "{54A78DA7-A564-4CE6-8631-06CAE7C3EA5B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.BL", "Bookify.BL\Bookify.BL.csproj", "{54A78DA7-A564-4CE6-8631-06CAE7C3EA5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
