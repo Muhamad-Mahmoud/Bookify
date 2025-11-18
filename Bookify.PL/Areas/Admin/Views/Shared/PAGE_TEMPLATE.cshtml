@@ -1,0 +1,223 @@
+<!-- BOOKIFY PAGE TEMPLATE
+     This is a template for creating new pages with the Bookify CSS design system.
+     Copy this and customize for your specific page.
+-->
+
+@{
+    ViewData["Title"] = "Page Title Here";
+}
+
+<!-- PAGE HEADER SECTION -->
+<div class="container-fluid py-5">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="mb-2 font-weight-black" style="font-size: 36px; color: var(--primary-blue);">
+                        <i class="fas fa-icon-name"></i> Page Title
+                    </h1>
+                    <p class="text-gray mb-0" style="font-size: 16px;">Brief description of what this page does</p>
+                </div>
+                <a href="#" class="btn-primary" style="white-space: nowrap;">
+                    <i class="fas fa-plus-circle"></i> Primary Action
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ALERTS SECTION (Optional) -->
+@if (TempData["success"] != null)
+{
+    <div class="container-fluid mb-4">
+        <div class="alert-success">
+            <i class="fas fa-check-circle"></i>
+            @TempData["success"]
+        </div>
+    </div>
+}
+
+@if (TempData["error"] != null)
+{
+    <div class="container-fluid mb-4">
+        <div class="alert-danger">
+            <i class="fas fa-exclamation-circle"></i>
+            @TempData["error"]
+        </div>
+    </div>
+}
+
+@if (TempData["warning"] != null)
+{
+    <div class="container-fluid mb-4">
+        <div class="alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            @TempData["warning"]
+        </div>
+    </div>
+}
+
+<!-- MAIN CONTENT SECTION -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- CARD 1: Main Content -->
+            <div class="card-elevated mb-5">
+                <div class="mb-4 pb-4" style="border-bottom: 2px solid var(--border-light);">
+                    <h2 class="mb-0 font-weight-bold" style="font-size: 18px; color: var(--text-dark);">
+                        <i class="fas fa-list"></i> Section Title
+                    </h2>
+                </div>
+                
+                <!-- Content goes here -->
+                <p class="text-gray mb-3">Description or introduction text</p>
+                
+                <!-- Example: List or Table -->
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead style="background: var(--bg-lighter); border-bottom: 2px solid var(--border-light);">
+                            <tr>
+                                <th style="color: var(--text-gray); font-weight: 700;">Column 1</th>
+                                <th style="color: var(--text-gray); font-weight: 700;">Column 2</th>
+                                <th class="text-center" style="color: var(--text-gray); font-weight: 700; width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border-light);">
+                                <td class="align-middle">Data 1</td>
+                                <td class="align-middle">Data 2</td>
+                                <td class="text-center align-middle">
+                                    <div style="display: flex; gap: 8px; justify-content: center;">
+                                        <a href="#" class="btn-primary" style="padding: 8px 14px; font-size: 13px; text-decoration: none; border-radius: 6px;">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="#" class="btn-secondary" style="padding: 8px 14px; font-size: 13px; text-decoration: none; border-radius: 6px; background: #E74C3C;" 
+                                           onclick="return confirm('Are you sure?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CARD 2: Additional Section (Optional) -->
+            <div class="card-elevated mb-5">
+                <div class="mb-4 pb-4" style="border-bottom: 2px solid var(--border-light);">
+                    <h3 class="mb-0 font-weight-bold" style="font-size: 18px; color: var(--text-dark);">
+                        <i class="fas fa-info-circle"></i> Additional Information
+                    </h3>
+                </div>
+                
+                <p class="text-gray mb-4">Additional content goes here</p>
+                
+                <!-- Example: Two Column Layout -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card-modern">
+                            <h5 class="mb-3" style="color: var(--text-dark);">Feature 1</h5>
+                            <p class="text-gray mb-0">Description of feature 1</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card-modern">
+                            <h5 class="mb-3" style="color: var(--text-dark);">Feature 2</h5>
+                            <p class="text-gray mb-0">Description of feature 2</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD 3: Form Section (Optional) -->
+            <div class="card-elevated">
+                <div class="mb-4 pb-4" style="border-bottom: 2px solid var(--border-light);">
+                    <h3 class="mb-0 font-weight-bold" style="font-size: 18px; color: var(--text-dark);">
+                        <i class="fas fa-edit"></i> Edit Information
+                    </h3>
+                </div>
+                
+                <form method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label style="display: block; color: var(--text-dark); font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                                Field 1
+                            </label>
+                            <input type="text" class="form-control-modern" placeholder="Enter value" style="width: 100%;">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label style="display: block; color: var(--text-dark); font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                                Field 2
+                            </label>
+                            <input type="text" class="form-control-modern" placeholder="Enter value" style="width: 100%;">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label style="display: block; color: var(--text-dark); font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                            Description
+                        </label>
+                        <textarea class="form-control-modern" placeholder="Enter description" rows="4" style="width: 100%;"></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px;">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button type="reset" class="btn-outline">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                        <a href="#" class="btn-outline" style="text-decoration: none;">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SPACING REFERENCE -->
+<!--
+    Margin/Padding Classes:
+    mt-xs, mt-sm, mt-md, mt-lg, mt-xl, mt-2xl (margin-top)
+    mb-xs, mb-sm, mb-md, mb-lg, mb-xl, mb-2xl (margin-bottom)
+    px-sm, px-md, px-lg (padding horizontal)
+    py-sm, py-md, py-lg (padding vertical)
+    
+    Color Classes:
+    text-primary, text-secondary, text-gray, text-light
+    bg-primary, bg-light, bg-lighter
+    border-light, border-primary
+    
+    Shadow Classes:
+    shadow-sm, shadow-md, shadow-lg, shadow-xl, shadow-2xl
+    
+    Button Classes:
+    btn-primary, btn-secondary, btn-outline
+    btn-small, btn-large
+    
+    Card Classes:
+    card-elevated, card-modern
+    
+    Alert Classes:
+    alert-info, alert-success, alert-warning
+    
+    Other:
+    hover-lift, hover-shadow, fade-in, slide-up
+    font-weight-black, font-size-lg
+-->
+
+<!-- ICON EXAMPLES using Font Awesome -->
+<!--
+    Common Icons:
+    fa-home, fa-user, fa-gear, fa-bell, fa-envelope
+    fa-trash, fa-edit, fa-eye, fa-plus, fa-check
+    fa-times, fa-search, fa-download, fa-upload
+    fa-heart, fa-star, fa-calendar, fa-clock
+    fa-map-marker-alt, fa-phone, fa-globe, fa-link
+    fa-facebook-f, fa-twitter, fa-instagram, fa-linkedin-in
+    
+    See: https://fontawesome.com/icons for full list
+-->

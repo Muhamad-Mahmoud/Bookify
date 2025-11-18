@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 namespace Bookify.Models
 {
     public class Customer : IdentityUser
-    {          
+    {
+        [Required]
+        public required string Name { get; set; }
+
         [StringLength(200, ErrorMessage = "Address cannot exceed 200 characters")]
         public string? Address { get; set; }
-
-        [StringLength(500, ErrorMessage = "Details cannot exceed 500 characters")]
-        public string? Details { get; set; }
 
         [Url(ErrorMessage = "Invalid URL format")]
         [Display(Name = "Personal Image URL")]

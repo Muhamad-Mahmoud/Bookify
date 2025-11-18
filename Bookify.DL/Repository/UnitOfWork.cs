@@ -24,6 +24,8 @@ namespace Bookify.DL.Repository
         public IRoomRepository Rooms { get;private set; }
         public IRoomTypeRepository RoomTypes { get;private set; }
 
+        public IReservedRoomRepository reservedRooms { get;private set; }
+
         public UnitOfWork(BookifyDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -37,9 +39,10 @@ namespace Bookify.DL.Repository
             Reservations = new ReservationRepository(_dbContext);
             Rooms= new RoomRepository(_dbContext);
             RoomTypes = new RoomTypeRepository(_dbContext);
+            reservedRooms = new ReservedRoomRepository(_dbContext);
         }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }

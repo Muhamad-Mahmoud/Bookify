@@ -1,10 +1,13 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Bookify.Models;
+using Bookify.BL.Interfaces;
+using Bookify.BL.Services;
 using Bookify.DL.Data;
 using Bookify.DL.Repository;
 using Bookify.DL.Repository.IRepository;
+using Bookify.Models;
+using Bookify.Utility;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<BookifyDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -26,6 +29,19 @@ builder.Services.AddIdentity<Customer, IdentityRole>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<ICityService, CityService>();
+builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
+
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+
 
 // Configure Identity options
 builder.Services.Configure<IdentityOptions>(options =>
@@ -69,7 +85,7 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{Area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 
 app.Run();

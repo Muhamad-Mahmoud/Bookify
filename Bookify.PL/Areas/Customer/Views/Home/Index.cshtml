@@ -1,0 +1,162 @@
+﻿@model SearchVM
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- ======================= -->
+<!-- HERO SECTION -->
+<!-- ======================= -->
+<section class="hero-section" role="banner">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="animate-fadeInUp">Find your next stay</h1>
+            <p class="animate-fadeInUp delay-200">Search deals on hotels, homes, and more…</p>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Search Box with Combined Calendar -->
+<div class="container search-container">
+    <div class="search-box">
+        <div class="search-tabs" role="tablist">
+            <button class="search-tab active"
+                    data-tab="stays"
+                    type="button"
+                    role="tab"
+                    aria-selected="true">
+                <i class="fas fa-bed"></i>
+                Stays
+            </button>
+        </div>
+
+        <div class="search-form-container">
+            <form class="search-form" id="searchForm" role="search">
+                <!-- Destination Input -->
+                <div class="form-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Where are you going?"
+                           id="destination"
+                           autocomplete="off"
+                           required>
+                </div>
+
+                <!-- Combined Check-in/Check-out Date Picker -->
+                <div class="form-group date-range-container">
+                    <div class="date-inputs-wrapper" role="button" tabindex="0">
+                        <div class="date-input-group">
+                            <span class="date-label">Check In</span>
+                            <input type="text"
+                                   placeholder="Sun, 26 Oct 2025"
+                                   class="date-input"
+                                   id="checkin"
+                                   autocomplete="off"
+                                   readonly
+                                   aria-label="Check-in date">
+                        </div>
+                        <div class="date-separator">—</div>
+                        <div class="date-input-group">
+                            <span class="date-label">Check Out</span>
+                            <input type="text"
+                                   placeholder="Mon, 10 Nov 2025"
+                                   class="date-input"
+                                   id="checkout"
+                                   autocomplete="off"
+                                   readonly
+                                   aria-label="Check-out date">
+                        </div>
+                    </div>
+
+                    <!-- Combined Calendar Dropdown -->
+                    <div class="calendar-dropdown-combined" id="combinedCalendar" role="dialog" aria-label="Date picker">
+                        <div class="calendar-navigation">
+                            <button type="button"
+                                    class="calendar-nav-btn"
+                                    id="prevMonthBtn"
+                                    aria-label="Previous month">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button type="button"
+                                    class="calendar-nav-btn"
+                                    id="nextMonthBtn"
+                                    aria-label="Next month">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="calendar-months-wrapper">
+                            <!-- First Month -->
+                            <div class="calendar-month-panel">
+                                <div class="calendar-month-header">
+                                    <h3 id="month1Title">October 2025</h3>
+                                </div>
+                                <div class="calendar-weekdays">
+                                    <div class="calendar-weekday">Su</div>
+                                    <div class="calendar-weekday">Mo</div>
+                                    <div class="calendar-weekday">Tu</div>
+                                    <div class="calendar-weekday">We</div>
+                                    <div class="calendar-weekday">Th</div>
+                                    <div class="calendar-weekday">Fr</div>
+                                    <div class="calendar-weekday">Sa</div>
+                                </div>
+                                <div class="calendar-days" id="month1Days" role="grid"></div>
+                            </div>
+
+                            <!-- Second Month -->
+                            <div class="calendar-month-panel">
+                                <div class="calendar-month-header">
+                                    <h3 id="month2Title">November 2025</h3>
+                                </div>
+                                <div class="calendar-weekdays">
+                                    <div class="calendar-weekday">Su</div>
+                                    <div class="calendar-weekday">Mo</div>
+                                    <div class="calendar-weekday">Tu</div>
+                                    <div class="calendar-weekday">We</div>
+                                    <div class="calendar-weekday">Th</div>
+                                    <div class="calendar-weekday">Fr</div>
+                                    <div class="calendar-weekday">Sa</div>
+                                </div>
+                                <div class="calendar-days" id="month2Days" role="grid"></div>
+                            </div>
+                        </div>
+
+                        <div class="calendar-footer">
+                            <button type="button" class="calendar-clear-btn" id="clearDatesBtn">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                            <button type="button" class="calendar-today-btn" id="todayBtn">
+                                <i class="fas fa-calendar-day"></i> Today
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guests Selector -->
+                <div class="form-group">
+                    <select id="guests" class="form-select" aria-label="Select number of guests">
+                        <option value="1">1 adult</option>
+                        <option value="2" selected>2 adults</option>
+                        <option value="3">3 adults</option>
+                        <option value="4">4 adults</option>
+                        <option value="5">5+ adults</option>
+                    </select>
+                </div>
+
+                <!-- Search Button -->
+                <button type="submit" class="btn-search">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ======================= -->
+<!-- SCRIPTS -->
+<!-- ======================= -->
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/javascript/main.js"></script>
+}

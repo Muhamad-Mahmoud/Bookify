@@ -1,0 +1,94 @@
+@model CityVM
+
+<link rel="stylesheet" href="~/css/country-forms.css" />
+
+<div class="container mt-4">
+
+  
+
+    <!-- Main Card -->
+    <div class="card form-card mx-auto" style="max-width: 600px;">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-map-marker-alt icon-spacing"></i> City Details
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <form method="post" asp-action="Edit">
+                <input type="hidden" asp-for="City.Id" />
+
+                <!-- City Name Input -->
+                <div class="form-group">
+                    <label for="City_Name" class="form-label">
+                        City Name <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text"
+                           id="City_Name"
+                           asp-for="City.Name"
+                           class="form-control"
+                           placeholder="Enter city name..."
+                           required />
+
+                    <span asp-validation-for="City.Name"
+                          class="validation-message"></span>
+                </div>
+
+                <!-- Postal Code Input -->
+                <div class="form-group">
+                    <label for="City_PostalCode" class="form-label">
+                        Postal Code <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text"
+                           id="City_PostalCode"
+                           asp-for="City.PostalCode"
+                           class="form-control"
+                           placeholder="Enter postal code..."
+                           required />
+
+                    <span asp-validation-for="City.PostalCode"
+                          class="validation-message"></span>
+                </div>
+
+                <!-- Country Dropdown -->
+                <div class="form-group">
+                    <label for="City_CountryId" class="form-label">
+                        Country <span class="text-danger">*</span>
+                    </label>
+
+                    <select id="City_CountryId"
+                            asp-for="City.CountryId"
+                            asp-items="Model.Countries"
+                            class="form-control"
+                            required>
+                        <option value="">-- Select a Country --</option>
+                    </select>
+
+                    <span asp-validation-for="City.CountryId"
+                          class="validation-message"></span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times icon-spacing"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save icon-spacing"></i>Save Changes
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/country-forms.js"></script>
+}
+

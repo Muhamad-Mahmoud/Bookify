@@ -1,0 +1,75 @@
+@model City
+
+<link rel="stylesheet" href="~/css/country-forms.css" />
+
+<style>
+    /* Delete-specific overrides */
+    .form-card .card-header {
+        background: var(--danger-gradient);
+    }
+</style>
+
+<div class="container mt-4">
+
+   
+
+    <!-- Main Card -->
+    <div class="card form-card mx-auto" style="max-width: 600px;">
+        
+        
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-info-circle icon-spacing"></i> Confirm Deletion
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <!-- City Info Display -->
+            <div class="info-box">
+                <div class="info-box-label">City Name</div>
+                <div class="info-box-value">
+                    @Model.Name
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-label">Postal Code</div>
+                <div class="info-box-value">
+                    @Model.PostalCode
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-label">Country</div>
+                <div class="info-box-value">
+                    @Model.Country?.CountryName
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-label">City ID</div>
+                <div style="font-size: 0.9rem; color: #9ca3af; margin-top: 0.5rem; font-family: monospace;">
+                    @Model.Id
+                </div>
+            </div>
+
+            <form method="post" asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times icon-spacing"></i>No, Cancel
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash icon-spacing"></i>Yes, Delete
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+

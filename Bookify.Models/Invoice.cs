@@ -16,7 +16,6 @@ namespace Bookify.Models
         [ValidateNever]
         public Customer? Customer { get; set; }
 
-        [Required(ErrorMessage = "Reservation is required")]
         public int ReservationId { get; set; }
         
         [ForeignKey(nameof(ReservationId))]
@@ -48,11 +47,8 @@ namespace Bookify.Models
 
     public enum InvoiceStatus
     {
-        [Display(Name = "Pending")]
         Pending,
-        [Display(Name = "Paid")]
         Paid,
-        [Display(Name = "Canceled")]
         Canceled
     }
 }

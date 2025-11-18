@@ -5,57 +5,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Bookify</title>
     <meta name="description" content="Bookify - Your Hotel Booking Solution">
-    <meta name="theme-color" content="#3b82f6">
+    <meta name="theme-color" content="#003580">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Preload Critical Resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     
-    <!-- Styles -->
+    <!-- Styles - Optimized Load Order -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/new_identity.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Bookify.styles.css" asp-append-version="true" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/identity.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/heroSearch.css" asp-append-version="true" /> *@
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Bookify</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+<body class="bookify-app">
+    <nav class="navbar navbar-expand-lg navbar-dark" role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" title="Back to home">
+                <i class="fas fa-hotel" aria-hidden="true"></i>
+                <span>Bookify</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" 
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between" id="navbarSupportedContent">
+                <ul class="navbar-nav flex-grow-1" role="menubar">
+                    <li class="nav-item" role="none">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" role="menuitem">
+                            <i class="fas fa-home" aria-hidden="true"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown" role="none">
+                        <a class="nav-link dropdown-toggle" href="#" role="menuitem" data-bs-toggle="dropdown" 
+                           aria-expanded="false" aria-haspopup="true">
+                            <i class="fas fa-cog" aria-hidden="true"></i>
+                            <span>Management</span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-label="Management options">
+                            <li role="none">
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Country" asp-action="Index" role="menuitem">
+                                    <i class="fas fa-globe" aria-hidden="true"></i>
+                                    <span>Countries</span>
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="City" asp-action="Index" role="menuitem">
+                                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                                    <span>Cities</span>
+                                </a>
+                            </li>
+                            <li role="none"><hr class="dropdown-divider"></li>
+                            <li role="none">
+                                <a class="dropdown-item" href="#" role="menuitem">More Options</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="navbar-actions" role="region" aria-label="User actions">
                     <partial name="_LoginPartial"></partial>
-
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+        </div>
+    </nav>
 
-    <footer class="border-top footer text-muted">
+    <main role="main" class="site-main" id="main-content">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
         <div class="container">
-            &copy; 2025 - Bookify - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-brand">
+                        <i class="fas fa-hotel" aria-hidden="true"></i>
+                        <span>Bookify</span>
+                    </div>
+                    <p class="footer-description">
+                        Your premium hotel booking solution. Find and book the best hotels worldwide with ease.
+                    </p>
+                    <div class="social-links" role="region" aria-label="Social media links">
+                        <a href="#" class="social-link" title="Follow us on Facebook" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                        <a href="#" class="social-link" title="Follow us on Twitter" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" class="social-link" title="Follow us on Instagram" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" class="social-link" title="Connect on LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links" role="navigation" aria-label="Quick links">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                        <li><a href="#">Hotels</a></li>
+                        <li><a href="#">Destinations</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Support</h5>
+                    <ul class="footer-links" role="navigation" aria-label="Support links">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Legal</h5>
+                    <ul class="footer-links" role="navigation" aria-label="Legal links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Disclaimers</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Bookify - All Rights Reserved. Crafted with <i class="fas fa-heart" style="color: #E74C3C;" aria-hidden="true"></i> by Bookify.com</p>
+            </div>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <button class="scroll-top" id="scrollTop" title="Back to Top" aria-label="Scroll back to top">
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+    </button>
+    <script src="~/lib/jquery/dist/jquery.min.js" defer></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="~/js/site.js" asp-append-version="true" defer></script>
+    <script src="~/js/layout-enhancements.js" asp-append-version="true" defer></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

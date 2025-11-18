@@ -99,11 +99,10 @@ namespace Bookify.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            public string? Name { get; set; }
             public string? Address { get; set; }
-            public string? Details { get; set; }
 
-            public string? PersonalImgUrl { get; set; }
-            public string? CoverImgUrl { get; set; }
+           
         }
 
 
@@ -125,9 +124,7 @@ namespace Bookify.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
                 user.Address = Input.Address;
-                user.Details = Input.Details;
-                user.PersonalImgUrl = Input.PersonalImgUrl;
-                user.CoverImgUrl = Input.CoverImgUrl;
+                user.Name = Input.Name;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
