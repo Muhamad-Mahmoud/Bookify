@@ -1,0 +1,113 @@
+﻿@model List<Hotel>
+
+<link rel="stylesheet" href="~/css/admin-tables.css" />
+
+<div class="dashboard-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-building"></i> Hotels Management
+        </h1>
+        <a asp-controller="Hotel" asp-action="Add" class="add-hotel-btn">
+            <i class="fas fa-plus-circle"></i> Add New Hotel
+        </a>
+    </div>
+
+    <!-- Hotels Table -->
+    <div class="hotels-table-container">
+        @if (Model.Any())
+        {
+            <table class="table hotels-table">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 80px;">ID</th>
+                        <th>Hotel Name</th>
+                        <th>City</th>
+                        <th>Owner</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center" style="width: 280px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <span class="hotel-id-badge">@item.Id</span>
+                            </td>
+                            <td>
+                                <span class="hotel-name">@item.Name</span>
+                            </td>
+                            <td>
+                                <span class="hotel-city">@item.City?.Name</span>
+                            </td>
+                            <td>
+                                <span class="hotel-owner">@item.Owner?.Name</span>
+                            </td>
+                            <td class="text-center">
+                                @{
+                                    string statusClass = item.Status == HotelStatus.Approved ? "status-approved" :
+                                                         item.Status == HotelStatus.Rejected ? "status-rejected" : "status-pending";
+                                }
+                                <span class="status-badge @statusClass">
+                                    @item.Status.ToString()
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="action-buttons">
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        @if (item.Status != HotelStatus.Approved)
+                                        {
+                                            <a asp-controller="Hotel"
+                                               asp-action="Approve"
+                                               asp-route-id="@item.Id"
+                                               class="btn-sm-custom btn-approve"
+                                               title="Approve Hotel">
+                                                <i class="fas fa-check"></i> Approve
+                                            </a>
+                                        }
+                                        
+                                        @if (item.Status != HotelStatus.Rejected)
+                                        {
+                                            <a asp-controller="Hotel"
+                                               asp-action="Reject"
+                                               asp-route-id="@item.Id"
+                                               class="btn-sm-custom btn-reject"
+                                               title="Reject Hotel">
+                                                <i class="fas fa-times"></i> Reject
+                                            </a>
+                                        }
+                                    }
+
+                                    <a asp-controller="Hotel"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn-sm-custom btn-edit"
+                                       title="Edit Hotel">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+
+                                    <a asp-controller="Hotel"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn-sm-custom btn-delete"
+                                       title="Delete Hotel">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-hotels-message">
+                <i class="fas fa-inbox"></i>
+                <p>No hotels found. <a asp-controller="Hotel" asp-action="Add">Create your first hotel</a></p>
+            </div>
+        }
+    </div>
+</div>

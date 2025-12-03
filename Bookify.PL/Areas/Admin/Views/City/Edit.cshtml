@@ -1,13 +1,13 @@
 @model CityVM
 
-<link rel="stylesheet" href="~/css/country-forms.css" />
+<link rel="stylesheet" href="~/css/admin-forms.css" />
 
 <div class="container mt-4">
 
   
 
     <!-- Main Card -->
-    <div class="card form-card mx-auto" style="max-width: 600px;">
+    <div class="card form-card mx-auto">
         <div class="card-header">
             <h5 class="card-title">
                 <i class="fas fa-map-marker-alt icon-spacing"></i> City Details
@@ -16,7 +16,7 @@
 
         <div class="card-body">
 
-            <form method="post" asp-action="Edit">
+            <form method="post" asp-action="Edit" enctype="multipart/form-data">
                 <input type="hidden" asp-for="City.Id" />
 
                 <!-- City Name Input -->
@@ -71,6 +71,43 @@
                           class="validation-message"></span>
                 </div>
 
+                <!-- City Image Upload -->
+                <div class="form-group">
+                    <label for="City_Image" class="form-label">
+                        City Image
+                    </label>
+
+                    <!-- Current Image Display -->
+                    @if (!string.IsNullOrEmpty(Model.City.Image))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Current Image:</label>
+                            <div>
+                                <img src="@Model.City.Image" alt="Current City Image" 
+                                     style="max-width: 300px; max-height: 200px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+                            </div>
+                        </div>
+                    }
+
+                    <input type="file"
+                           id="City_Image"
+                           name="ImageFile"
+                           class="form-control"
+                           accept="image/*"
+                           onchange="previewImage(event)" />
+
+                    <small class="form-text text-muted">
+                        Upload a new image to replace the current one (JPG, PNG, GIF - Max 5MB)
+                    </small>
+
+                    <!-- New Image Preview -->
+                    <div id="imagePreview" class="mt-3" style="display: none;">
+                        <label class="form-label text-muted small">New Image Preview:</label>
+                        <img id="preview" src="#" alt="New City Image Preview" 
+                             style="max-width: 300px; max-height: 200px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+                    </div>
+                </div>
+
                 <!-- Buttons -->
                 <div class="button-group">
                     <a asp-action="Index" class="btn btn-outline-secondary">
@@ -90,5 +127,19 @@
 @section scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/country-forms.js"></script>
+    
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 }
 

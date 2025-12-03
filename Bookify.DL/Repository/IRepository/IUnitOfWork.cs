@@ -9,7 +9,6 @@ namespace Bookify.DL.Repository.IRepository
     public interface IUnitOfWork : IDisposable
     {
         public ICityRepository Cities { get; }
-        public ICompanyRepository Companies { get; }
         public ICountryRepository Countries { get; }
         public ICustomerRepository Customers { get; }
         public IHotelRepository Hotels { get; }
@@ -18,6 +17,8 @@ namespace Bookify.DL.Repository.IRepository
         public IRoomRepository Rooms { get; }
         public IRoomTypeRepository RoomTypes { get; }
         public IReservedRoomRepository reservedRooms { get; }
+        public IRoomImageRepository RoomImages { get; }
+        public IHotelImageRepository HotelImages { get; }
 
         public Task SaveAsync();
     }

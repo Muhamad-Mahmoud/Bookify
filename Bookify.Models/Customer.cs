@@ -19,6 +19,8 @@ namespace Bookify.Models
         [Display(Name = "Cover Image URL")]
         public string? CoverImgUrl { get; set; }
 
+        public ICollection<Hotel> Hotels { get; set; }
+
         public ICollection<Reservation>? Reservations { get; set; } = new List<Reservation>();
     }
 }

@@ -1,78 +1,78 @@
 @model List<City>
 
-    <div class="container">
+<link rel="stylesheet" href="~/css/admin-tables.css" />
 
-
-<div class="card shadow border-0 mt-4">
-
-    <!-- Header with new color -->
-        <div class="card-header py-2" style="background-color:#002147;">
-        <div class="col-12">
-            <h2 class="text-white text-center m-0">
-                Cities List
-            </h2>
-        </div>
+<div class="dashboard-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-city"></i> Cities Management
+        </h1>
+        <a asp-controller="City" asp-action="Add" class="add-hotel-btn">
+            <i class="fas fa-plus-circle"></i> Add New City
+        </a>
     </div>
 
-    <div class="card-body">
-
-        <!-- Add button -->
-        <div class="row pt-2 pb-3">
-            <div class="col-12 text-end">
-                <a asp-controller="City" asp-action="Add" class="btn btn-success">
-                    <i class="bi bi-plus-circle"></i> Add City
-                </a>
-            </div>
-        </div>
-
-        <!-- Table -->
-        <table class="table table-bordered table-striped table-hover">
-            <thead class="table-light">
-                <tr>
-                    <th class="text-center" style="width: 100px;">ID</th>
-                    <th>City Name</th>
-                    <th>Postal Code</th>
-                    <th>Country</th>
-                    <th class="text-center" style="width: 250px;"></th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var item in Model)
-                {
+    <!-- Cities Table -->
+    <div class="hotels-table-container">
+        @if (Model.Any())
+        {
+            <table class="table hotels-table">
+                <thead>
                     <tr>
-                        <td class="text-center fw-semibold">@item.Id</td>
-                        <td class="fw-semibold">@item.Name</td>
-                        <td class="fw-semibold">@item.PostalCode</td>
-                        <td class="fw-semibold">@item.Country?.CountryName</td>
-
-                        <td class="text-center">
-                            <div class="btn-group w-75" role="group">
-
-                                <a asp-controller="City"
-                                   asp-action="Edit"
-                                   asp-route-id="@item.Id"
-                                   class="btn btn-warning mx-2">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
-
-                                <a asp-controller="City"
-                                   asp-action="Delete"
-                                   asp-route-id="@item.Id"
-                                   class="btn btn-danger mx-2">
-                                    <i class="bi bi-trash-fill"></i> Delete
-                                </a>
-
-                            </div>
-                        </td>
+                        <th class="text-center" style="width: 80px;">ID</th>
+                        <th>City Name</th>
+                        <th>Postal Code</th>
+                        <th>Country</th>
+                        <th class="text-center" style="width: 200px;">Actions</th>
                     </tr>
-                }
-            </tbody>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <span class="hotel-id-badge">@item.Id</span>
+                            </td>
+                            <td>
+                                <span class="hotel-name">@item.Name</span>
+                            </td>
+                            <td>
+                                <span class="hotel-city">@item.PostalCode</span>
+                            </td>
+                            <td>
+                                <span class="hotel-owner">@item.Country?.CountryName</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="action-buttons">
+                                    <a asp-controller="City"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn-sm-custom btn-edit"
+                                       title="Edit City">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
 
-        </table>
-
+                                    <a asp-controller="City"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn-sm-custom btn-delete"
+                                       title="Delete City">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-hotels-message">
+                <i class="fas fa-inbox"></i>
+                <p>No cities found. <a asp-controller="City" asp-action="Add">Create your first city</a></p>
+            </div>
+        }
     </div>
-</div>
-
-
 </div>

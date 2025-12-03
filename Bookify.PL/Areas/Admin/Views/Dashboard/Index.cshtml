@@ -1,0 +1,260 @@
+﻿@model DashboardVM
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="dashboard-page">
+    <div class="page-header mb-4">
+        <h1 class="page-title">
+            <i class="fas fa-chart-line"></i> Dashboard
+        </h1>
+        <p class="page-subtitle">
+            Welcome back@(Model.IsAdmin ? ", Admin" : "")! 
+            @(Model.IsAdmin ? "Manage all" : "Manage your") bookings and hotel operations.
+        </p>
+    </div>
+
+    <div class="row">
+        <!-- Total Hotels -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <i class="fas fa-hotel stat-icon-hotel"></i>
+                    <span class="stat-label">Total Hotels</span>
+                </div>
+                <div class="stat-value">@Model.TotalHotels</div>
+                @if (Model.HotelsChange != 0)
+                {
+                    <div class="stat-change @(Model.HotelsChange > 0 ? "positive" : "negative")">
+                        <i class="fas fa-arrow-@(Model.HotelsChange > 0 ? "up" : "down")"></i> 
+                        @Math.Abs(Model.HotelsChange).ToString("0.#")% from last month
+                    </div>
+                }
+                else
+                {
+                    <div class="stat-change">
+                        <i class="fas fa-minus"></i> No change
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Active Reservations -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <i class="fas fa-calendar-check stat-icon-reservation"></i>
+                    <span class="stat-label">Active Reservations</span>
+                </div>
+                <div class="stat-value">@Model.ActiveReservations</div>
+                <div class="stat-change @(Model.ReservationsChange > 0 ? "positive" : Model.ReservationsChange < 0 ? "negative" : "")">
+                    @if (Model.ReservationsChange != 0)
+                    {
+                        <i class="fas fa-arrow-@(Model.ReservationsChange > 0 ? "up" : "down")"></i>
+                        @Math.Abs(Model.ReservationsChange).ToString("0.#") 
+                    }
+                    else
+                    {
+                        <i class="fas fa-minus"></i> <span>No change</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Rooms -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <i class="fas fa-door-open stat-icon-room"></i>
+                    <span class="stat-label">Available Rooms</span>
+                </div>
+                <div class="stat-value">@Model.AvailableRooms</div>
+                @if (Model.RoomsChange != 0)
+                {
+                    <div class="stat-change @(Model.RoomsChange > 0 ? "positive" : "negative")">
+                        <i class="fas fa-arrow-@(Model.RoomsChange > 0 ? "up" : "down")"></i>
+                        @Math.Abs(Model.RoomsChange).ToString("0.#")% from last month
+                    </div>
+                }
+                else
+                {
+                    <div class="stat-change">
+                        <i class="fas fa-check-circle"></i> Available now
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Total Revenue -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <i class="fas fa-dollar-sign stat-icon-revenue"></i>
+                    <span class="stat-label">Total Revenue</span>
+                </div>
+                <div class="stat-value">EGP @Model.TotalRevenue.ToString("N0")</div>
+                <div class="stat-change @(Model.RevenueChange > 0 ? "positive" : Model.RevenueChange < 0 ? "negative" : "")">
+                    @if (Model.RevenueChange != 0)
+                    {
+                        <i class="fas fa-arrow-@(Model.RevenueChange > 0 ? "up" : "down")"></i>
+                        @Math.Abs(Model.RevenueChange).ToString("0.#")
+                    }
+                    else
+                    {
+                        <i class="fas fa-minus"></i> <span>No change</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Quick Actions -->
+        <div class="col-lg-8">
+            <div class="card dashboard-card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt"></i> Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="@Url.Action("Create", "Hotel", new { area = "Admin" })" class="quick-action-btn">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Add New Hotel</span>
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="@Url.Action("Create", "Room", new { area = "Admin" })" class="quick-action-btn">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Add New Room</span>
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="@Url.Action("Index", "Reservation", new { area = "Admin" })" class="quick-action-btn">
+                                <i class="fas fa-eye"></i>
+                                <span>View Reservations</span>
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="@Url.Action("Index", "Invoice", new { area = "Admin" })" class="quick-action-btn">
+                                <i class="fas fa-file-invoice"></i>
+                                <span>View Invoices</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="col-lg-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history"></i> Recent Activities
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="activity-list">
+                        <li>
+                            <span class="activity-badge">New</span>
+                            Hotel "Grand Palace" added
+                        </li>
+                        <li>
+                            <span class="activity-badge">Reservation</span>
+                            10 new bookings today
+                        </li>
+                        <li>
+                            <span class="activity-badge">Payment</span>
+                            $5,200 received
+                        </li>
+                        <li>
+                            <span class="activity-badge">Update</span>
+                            Room inventory updated
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Recent Reservations -->
+        <div class="col-12">
+            <div class="card dashboard-card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list"></i> Recent Reservations
+                    </h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Reservation ID</th>
+                                <th>Guest Name</th>
+                                <th>Hotel</th>
+                                <th>Check-in</th>
+                                <th>Check-out</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RecentReservations.Any())
+                            {
+                                @foreach (var reservation in Model.RecentReservations)
+                                {
+                                    <tr>
+                                        <td><strong>#@reservation.Id</strong></td>
+                                        <td>@reservation.Customer.Name</td>
+                                        <td>@reservation.Hotel?.Name</td>
+                                        <td>@reservation.CheckInDate.ToString("MMM dd, yyyy")</td>
+                                        <td>@reservation.CheckOutDate.ToString("MMM dd, yyyy")</td>
+                                        <td>EGP @reservation.TotalPrice.ToString("N0")</td>
+                                        <td>
+                                            @switch (reservation.Status)
+                                            {
+                                                case ReservationStatus.Pending:
+                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                    break;
+                                                case ReservationStatus.Confirmed:
+                                                    <span class="badge bg-success">Confirmed</span>
+                                                    break;
+                                                case ReservationStatus.Cancelled:
+                                                    <span class="badge bg-danger">Cancelled</span>
+                                                    break;
+                                                case ReservationStatus.Completed:
+                                                    <span class="badge bg-info">Completed</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Details", "Reservation", new { area = "Admin", id = reservation.Id })" 
+                                               class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted py-4">
+                                        <i class="fas fa-inbox fa-2x mb-2"></i>
+                                        <p>No reservations found</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

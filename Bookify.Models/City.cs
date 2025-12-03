@@ -17,6 +17,11 @@ namespace Bookify.Models
         [Display(Name = "Postal Code")]
         public string PostalCode { get; set; } = string.Empty;
 
+        [StringLength(500, ErrorMessage = "Image URL cannot exceed 500 characters")]
+        [Url(ErrorMessage = "Invalid URL format")]
+        [Display(Name = "City Image")]
+        public string? Image { get; set; }
+
         [Required(ErrorMessage = "Country is required")]
         [Display(Name = "Country")]
         public int CountryId { get; set; }

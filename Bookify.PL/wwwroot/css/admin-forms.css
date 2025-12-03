@@ -1,0 +1,511 @@
+/* ============================================
+   COUNTRY MANAGEMENT FORMS - SHARED STYLES
+   ============================================ */
+
+:root {
+    /* Primary & Brand Colors - Unified Admin Palette */
+    --primary-color: #667eea;
+    --primary-hover: #5568d3;
+    --secondary-color: #002147;
+    /* Status Colors */
+    --success-color: #008009;
+    --warning-color: #FEBB02;
+    --danger-color: #dc3545;
+    /* Gradients */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #5568d3 100%);
+    --danger-gradient: linear-gradient(135deg, #dc3545 0%, #b52a36 100%);
+    /* Backgrounds */
+    --light-bg: #f8f9fa;
+    --bg-lighter: #FAFAFA;
+    /* Borders */
+    --border-color: #e9ecef;
+    --border-light: #e9ecef;
+    /* Text */
+    --text-dark: #2d3748;
+    --text-light: #4a5568;
+    --text-muted: #9ca3af;
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Badge */
+    --badge-bg: #e7f3ff;
+    --badge-color: #667eea;
+    /* Transitions */
+    --transition: all 0.3s ease;
+}
+
+/* ============================================
+   PAGE HEADER STYLES
+   ============================================ */
+
+.page-header {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.page-header h2 {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 1.5rem;
+}
+
+.page-header p {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.95;
+    font-size: 0.95rem;
+    font-weight: 300;
+}
+
+/* ============================================
+   FORM CARD STYLES
+   ============================================ */
+
+.form-card {
+    border: none;
+    border-radius: 12px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    overflow: hidden;
+    background: white;
+}
+
+
+.form-card .card-header {
+    background: var(--primary-gradient);
+    border: none;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.form-card .card-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -40%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    animation: shimmer 3s infinite;
+}
+
+.form-card .card-header .card-title {
+    color: white;
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: 0.3px;
+    position: relative;
+    z-index: 1;
+    margin: 0;
+}
+
+.form-card .card-body {
+    padding: 2rem;
+    background: var(--light-bg);
+}
+
+/* ============================================
+   FORM GROUP AND LABEL STYLES
+   ============================================ */
+
+.form-group {
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+.form-group:nth-child(4) { animation-delay: 0.4s; }
+
+.form-label {
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-size: 0.85rem;
+}
+
+.form-label .text-danger {
+    color: var(--danger-color);
+    font-weight: 900;
+    margin-left: 0.35rem;
+}
+
+/* ============================================
+   FORM CONTROL STYLES
+   ============================================ */
+
+.form-control {
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: white;
+    color: var(--text-dark);
+    font-weight: 500;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+    width: 100%;
+}
+
+.form-control:focus {
+    background-color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), inset 0 2px 4px rgba(0, 0, 0, 0.02);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger-color);
+    background-color: #fff5f5;
+}
+
+.form-control.is-invalid:focus {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1), inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* ============================================
+   VALIDATION AND ERROR MESSAGES
+   ============================================ */
+
+.validation-message {
+    color: var(--danger-color);
+    font-size: 0.8rem;
+    margin-top: 0.6rem;
+    display: block;
+    font-weight: 500;
+    animation: shake 0.3s ease-in-out;
+}
+
+.country-error {
+    color: var(--danger-color);
+    font-size: 0.8rem;
+    margin-top: 0.6rem;
+    display: none;
+    font-weight: 500;
+    animation: shake 0.3s ease-in-out;
+}
+
+/* ============================================
+   WARNING ALERT STYLES
+   ============================================ */
+
+.warning-alert {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border: 2px solid var(--warning-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.warning-alert i {
+    color: #ff9800;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+}
+
+.warning-alert-content {
+    flex: 1;
+}
+
+.warning-alert-title {
+    font-weight: 700;
+    color: #856404;
+    margin: 0 0 0.5rem 0;
+}
+
+.warning-alert-message {
+    color: #856404;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ============================================
+   INFO BOX STYLES
+   ============================================ */
+
+.info-box {
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-box-label {
+    font-size: 0.75rem;
+    color: var(--text-dark);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.info-box-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.info-box-value i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.info-box-id {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    font-family: 'Courier New', monospace;
+}
+
+/* ============================================
+   BUTTON STYLES
+   ============================================ */
+
+.button-group {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-color);
+    animation: fadeInUp 0.5s ease-out 0.4s forwards;
+    opacity: 0;
+}
+
+.btn {
+    border-radius: 10px;
+    padding: 0.85rem 2rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s, height 0.5s;
+}
+
+.btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Primary Button */
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(102, 126, 234, 0.4);
+    color: white;
+    background: var(--primary-hover);
+}
+
+.btn-primary:active {
+    transform: translateY(-1px);
+}
+
+/* Danger Button */
+.btn-danger {
+    background: var(--danger-gradient);
+    color: white;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+}
+
+.btn-danger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(220, 53, 69, 0.4);
+    color: white;
+}
+
+.btn-danger:active {
+    transform: translateY(-1px);
+}
+
+/* Outline Secondary Button */
+.btn-outline-secondary {
+    color: var(--primary-color);
+    border: 2.5px solid var(--primary-color);
+    background-color: transparent;
+    font-weight: 700;
+}
+
+.btn-outline-secondary:hover {
+    color: white;
+    background: var(--primary-gradient);
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-outline-secondary:active {
+    transform: translateY(-1px);
+}
+
+.button-group .btn-outline-secondary,
+.button-group .btn-danger {
+    flex: 1;
+}
+
+/* ============================================
+   ICON SPACING
+   ============================================ */
+
+.icon-spacing {
+    margin-right: 0.5rem;
+    font-size: 1rem;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% { right: -40%; }
+    100% { right: -140%; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .page-header {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .form-card .card-body {
+        padding: 1.8rem;
+    }
+
+    .button-group {
+        flex-direction: column-reverse;
+        gap: 1rem;
+        padding-top: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .button-group .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .page-header {
+        border-radius: 8px;
+        padding: 1.5rem 1rem;
+    }
+
+    .form-card {
+        border-radius: 12px;
+        margin: 0 -1rem;
+        width: calc(100% + 2rem);
+    }
+
+    .form-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .form-label {
+        font-size: 0.8rem;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.85rem;
+    }
+
+    .info-box {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .warning-alert {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .warning-alert i {
+        font-size: 1.25rem;
+        margin-top: 0;
+    }
+}

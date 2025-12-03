@@ -1,0 +1,61 @@
+@model IEnumerable<Invoice>
+
+<link rel="stylesheet" href="~/css/admin-tables.css" />
+
+<div class="dashboard-page">
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-receipt"></i> Invoices Management
+        </h1>
+    </div>
+
+    <div class="hotels-table-container">
+        @if (Model.Any())
+        {
+            <table class="table hotels-table">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th>Hotel</th>
+                        <th>Customer</th>
+                        <th>Reservation ID</th>
+                        <th>Amount</th>
+                        <th>Issued At</th>
+                        <th>Paid At</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <span class="hotel-id-badge">@item.Id</span>
+                            </td>
+                            <td>
+                                <span class="fw-bold">@item.Hotel?.Name</span>
+                            </td>
+                            <td>@item.Customer?.Name</td>
+                            <td>@item.ReservationId</td>
+                            <td>@item.InvoiceAmount.ToString("C")</td>
+                            <td>@item.IssuedAt.ToShortDateString()</td>
+                            <td>@(item.PaidAt.HasValue ? item.PaidAt.Value.ToShortDateString() : "-")</td>
+                            <td class="text-center">
+                                <span class="status-badge @(item.Status == InvoiceStatus.Paid ? "status-approved" : item.Status == InvoiceStatus.Canceled ? "status-rejected" : "status-pending")">
+                                    @item.Status
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-hotels-message">
+                <i class="fas fa-inbox"></i>
+                <p>No invoices found.</p>
+            </div>
+        }
+    </div>
+</div>

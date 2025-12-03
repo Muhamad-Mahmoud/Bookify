@@ -1,0 +1,79 @@
+@model IEnumerable<Reservation>
+
+<link rel="stylesheet" href="~/css/admin-tables.css" />
+
+<div class="dashboard-page">
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-calendar-check"></i> Reservations Management
+        </h1>
+    </div>
+
+    <div class="hotels-table-container">
+        @if (Model.Any())
+        {
+            <table class="table hotels-table">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th>Hotel</th>
+                        <th>Customer</th>
+                        <th>Room Type</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Total Price</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <span class="hotel-id-badge">@item.Id</span>
+                            </td>
+                            <td>
+                                <span class="fw-bold">@item.Hotel?.Name</span>
+                            </td>
+                            <td>@item.Customer?.Name</td>
+                            <td>
+                                @if(item.RoomReserved != null && item.RoomReserved.Any())
+                                {
+                                    @item.RoomReserved.First().Room?.RoomType?.Name
+                                }
+                            </td>
+                            <td>@item.CheckInDate.ToShortDateString()</td>
+                            <td>@item.CheckOutDate.ToShortDateString()</td>
+                            <td>@item.TotalPrice.ToString("C")</td>
+                            <td class="text-center">
+                                <span class="status-badge @(item.Status == ReservationStatus.Confirmed ? "status-approved" : item.Status == ReservationStatus.Cancelled ? "status-rejected" : "status-pending")">
+                                    @item.Status
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="action-buttons">
+                                    @if (item.Status != ReservationStatus.Cancelled && item.Status != ReservationStatus.Confirmed)
+                                    {
+                                        <form asp-action="Cancel" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            <button type="submit" class="btn-sm-custom btn-reject" title="Cancel Reservation" onclick="return confirm('Are you sure you want to cancel this reservation?');">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-hotels-message">
+                <i class="fas fa-inbox"></i>
+                <p>No reservations found.</p>
+            </div>
+        }
+    </div>
+</div>

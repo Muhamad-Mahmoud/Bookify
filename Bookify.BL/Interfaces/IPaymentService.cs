@@ -11,5 +11,6 @@ namespace Bookify.BL.Interfaces
 {
     public interface IPaymentService
     {
-        public Session CreateCheckoutSession(Room room, string domain);    }
+        public Session CreateCheckoutSession(Reservation reservation, RoomType roomType, string domain);
+    }
 }

@@ -1,0 +1,115 @@
+@model Bookify.Models.ViewModels.RoomVM
+
+<link rel="stylesheet" href="~/css/admin-forms.css" />
+
+<div class="container mt-4">
+
+    <!-- Main Card -->
+    <div class="card form-card mx-auto">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-door-open icon-spacing"></i> Add Physical Room
+            </h5>
+            <p class="card-header-subtitle">Create a new physical room instance</p>
+        </div>
+
+        <div class="card-body">
+            <form method="post" asp-action="Add">
+
+                <!-- Room Number -->
+                <div class="form-group mb-3">
+                    <label asp-for="room.RoomNumber" class="form-label">
+                        Room Number <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text"
+                           asp-for="room.RoomNumber"
+                           class="form-control"
+                           placeholder="e.g., 101, 205, 310"
+                           required />
+
+                    <span asp-validation-for="room.RoomNumber"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Floor -->
+                <div class="form-group mb-3">
+                    <label asp-for="room.Floor" class="form-label">
+                        Floor (Optional)
+                    </label>
+
+                    <input type="number"
+                           asp-for="room.Floor"
+                           class="form-control"
+                           placeholder="e.g., 1, 2, 3"
+                           min="0" />
+
+                    <span asp-validation-for="room.Floor"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Room Type -->
+                <div class="form-group mb-3">
+                    <label asp-for="room.RoomTypeId" class="form-label">
+                        Room Type <span class="text-danger">*</span>
+                    </label>
+
+                    <select asp-for="room.RoomTypeId"
+                            asp-items="@Model.RoomTypeList"
+                            class="form-control"
+                            required>
+                        <option value="">-- Select a Room Type --</option>
+                    </select>
+
+                    <span asp-validation-for="room.RoomTypeId"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Status -->
+                <div class="form-group mb-3">
+                    <label asp-for="room.Status" class="form-label">
+                        Status
+                    </label>
+
+                    <select asp-for="room.Status" class="form-control">
+                        <option value="@RoomStatus.Available">Available</option>
+                        <option value="@RoomStatus.Occupied">Occupied</option>
+                        <option value="@RoomStatus.Maintenance">Maintenance</option>
+                    </select>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group mb-3">
+                    <label asp-for="room.Notes" class="form-label">
+                        Internal Notes (Optional)
+                    </label>
+
+                    <textarea asp-for="room.Notes"
+                              class="form-control"
+                              placeholder="e.g., Near elevator, High floor view, etc."
+                              rows="3"></textarea>
+
+                    <span asp-validation-for="room.Notes"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check me-1"></i> Save
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

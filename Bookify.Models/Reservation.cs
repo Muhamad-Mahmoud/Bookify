@@ -22,8 +22,7 @@ namespace Bookify.Models
         public string PaymentMethod { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Status is required")]
-        [StringLength(20, ErrorMessage = "Status cannot exceed 20 characters")]
-        public string Status { get; set; } = string.Empty;
+        public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
 
         [Required(ErrorMessage = "Check-in date is required")]
         [DataType(DataType.Date)]
@@ -48,5 +47,18 @@ namespace Bookify.Models
 
         [ValidateNever]
         public Invoice? Invoice { get; set; }
+
+        public int HotelId { get; set; }
+        [ForeignKey(nameof(HotelId))]
+        [ValidateNever]
+        public Hotel Hotel { get; set; }
+    }
+
+    public enum ReservationStatus
+    {
+        Pending,
+        Confirmed,
+        Cancelled,
+        Completed
     }
 }

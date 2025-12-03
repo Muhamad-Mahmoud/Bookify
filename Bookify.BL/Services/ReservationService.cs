@@ -3,10 +3,7 @@ using Bookify.DL.Repository.IRepository;
 using Bookify.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Bookify.BL.Services
@@ -14,77 +11,181 @@ namespace Bookify.BL.Services
     public class ReservationService : IReservationService
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public ReservationService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<decimal> CalculatePrice(int roomId, DateTime startDate, DateTime endDate)
+
+        public async Task<decimal> CalculatePrice(int roomTypeId, DateTime checkIn, DateTime checkOut)
         {
-            var room = await _unitOfWork.Rooms.GetAsync(roomId);
+            var roomType = await _unitOfWork.RoomTypes.GetAsync(roomTypeId);
+            if (roomType == null) return 0;
 
-            var days = (endDate - startDate).TotalDays;
+            var days = (checkOut - checkIn).TotalDays;
+            if (days <= 0) return 0;
 
-            if (days <= 0)
-                return 0;
-
-            var totalPrice = (decimal)days * room.Price;
-            return totalPrice;
+            return (decimal)days * roomType.BasePrice;
         }
 
-        public async Task<bool> CheckAvailabilityAsync(int roomId, DateTime date)
+        public async Task<int> CreateReservationAsync(string userId, int roomTypeId, DateTime checkInDate, DateTime checkOutDate)
         {
-            // Normalize the input date to date-only
-            var targetDate = date.Date;
+            // Find available room
+            var availableRoom = await FindAvailableRoomAsync(roomTypeId, checkInDate, checkOutDate);
 
-            // Check for any reservation that includes the target date.
-            // Here we treat CheckOutDate as exclusive (guest leaves on CheckOutDate morning).
-            // Note: comparing DateTime properties without .Date helps EF Core translate the
-            // expression to SQL; we normalize the input instead.
-            var reservation = await _unitOfWork.Reservations.GetAsync(
-                r => r.RoomReserved.Any(rr => rr.RoomId == roomId)
-                     && r.CheckInDate <= targetDate
-                     && r.CheckOutDate > targetDate
+            // Fetch RoomType to get HotelId
+            var roomType = await _unitOfWork.RoomTypes.GetAsync(roomTypeId);
+            if (roomType == null) throw new InvalidOperationException("Room Type not found");
+
+            // Calculate total price
+            var totalPrice = await CalculatePrice(roomTypeId, checkInDate, checkOutDate);
+
+            // Create Reservation entity
+            var reservation = new Reservation
+            {
+                CustomerId = userId,
+                Status = ReservationStatus.Pending,
+                CheckInDate = checkInDate,
+                CheckOutDate = checkOutDate,
+                TotalPrice = totalPrice,
+                PaymentMethod = "Pending",
+                HotelId = roomType.HotelId,
+                RoomReserved = new List<ReservedRoom>()
+            };
+
+            // Save Reservation
+            await _unitOfWork.Reservations.AddAsync(reservation);
+            await _unitOfWork.SaveAsync();
+
+            // Create ReservedRoom entry
+            var reservedRoom = new ReservedRoom
+            {
+                RoomId = availableRoom.Id,
+                ReservationId = reservation.Id
+            };
+
+            // Save changes
+            await _unitOfWork.reservedRooms.AddAsync(reservedRoom);
+            await _unitOfWork.SaveAsync();
+
+            // Return reservation.Id
+            return reservation.Id;
+        }
+
+        private async Task<Room?> FindAvailableRoomAsync(int roomTypeId, DateTime checkIn, DateTime checkOut)
+        {
+            // Get all rooms of the requested type
+            var rooms = await _unitOfWork.Rooms.GetAllAsync(r => r.RoomTypeId == roomTypeId);
+            var roomIds = rooms.Select(r => r.Id).ToList();
+
+            // Find overlapping reservations
+            var overlappingReservations = await _unitOfWork.Reservations.GetAllAsync(
+                r => r.Status != ReservationStatus.Cancelled
+                     && r.CheckInDate < checkOut
+                     && r.CheckOutDate > checkIn
+                     && r.RoomReserved.Any(rr => roomIds.Contains(rr.RoomId)),
+                includeProperties: "RoomReserved"
             );
 
-            return reservation == null;
+            // Identify booked room IDs
+            var bookedRoomIds = overlappingReservations
+                .SelectMany(r => r.RoomReserved)
+                .Select(rr => rr.RoomId)
+                .ToHashSet();
+
+            // Return the first room that is not booked
+            return rooms.FirstOrDefault(r => !bookedRoomIds.Contains(r.Id));
         }
 
-        public Task<int> CreatePendingReservationAsync(int roomId, string userId)
+        public async Task<bool> ConfirmReservationAsync(int reservationId, string paymentIntentId)
         {
-            var room = _unitOfWork.Rooms.GetAsync( roomId);
-            var user = _unitOfWork.Customers.GetAsync(u=>u.Id==userId);
+            var reservation = await _unitOfWork.Reservations.GetAsync(
+                r => r.Id == reservationId,
+                includeProperties: "RoomReserved.Room.RoomType"
+            );
+            if (reservation == null) return false;
 
-            //var reservation = new Reservation
-            //{
-            //    CustomerId = userId,
-            //    Status = "pending",
-            //    CheckInDate = DateTime.Now,
-            //    TotalPrice = CalculatePrice(roomId, )
-            //}
-            
-            
-            
-            throw new NotImplementedException();
+            reservation.Status = ReservationStatus.Confirmed;
+            reservation.PaymentMethod = "Stripe";
+
+            // Update Room Status to Occupied
+            if (reservation.RoomReserved != null)
+            {
+                foreach (var rr in reservation.RoomReserved)
+                {
+                    if (rr.Room != null)
+                    {
+                        rr.Room.Status = RoomStatus.Occupied;
+                        _unitOfWork.Rooms.Update(rr.Room);
+                    }
+                }
+            }
+
+            // Create Invoice
+            var invoice = new Invoice
+            {
+                CustomerId = reservation.CustomerId,
+                ReservationId = reservation.Id,
+                InvoiceAmount = reservation.TotalPrice,
+                IssuedAt = DateTime.Now,
+                PaidAt = DateTime.Now,
+                Status = InvoiceStatus.Paid,
+                HotelId = reservation.HotelId,
+                PaymentIntentId = paymentIntentId
+            };
+
+            await _unitOfWork.Invoices.AddAsync(invoice);
+
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
-        public Task<bool> ConfirmReservationAsync(int reservationId, string paymentIntentId)
+        public async Task<Reservation?> GetReservationByIdAsync(int reservationId)
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.Reservations.GetAsync(
+                r => r.Id == reservationId,
+                includeProperties: "RoomReserved.Room.RoomType,Customer,Hotel"
+            );
         }
 
-        public Task<Reservation?> GetReservationByIdAsync(int reservationId)
+        public async Task<IEnumerable<Reservation>> GetReservationsForUserAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.Reservations.GetAllAsync(
+                r => r.CustomerId == userId,
+                includeProperties: "RoomReserved.Room.RoomType,Hotel"
+            );
         }
 
-        public Task<IEnumerable<Reservation>> GetReservationsForUserAsync(string userId)
+        public async Task<IEnumerable<Reservation>> GetAllReservationsAsync(string? ownerId = null)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(ownerId))
+            {
+                return await _unitOfWork.Reservations.GetAllAsync(includeProperties: "RoomReserved.Room.RoomType.Hotel,Customer,Hotel");
+            }
+            else
+            {
+                // Filter reservations directly by HotelId via navigation property
+                return await _unitOfWork.Reservations.GetAllAsync(
+                    r => r.Hotel.OwnerId == ownerId,
+                    includeProperties: "RoomReserved.Room.RoomType.Hotel,Customer,Hotel"
+                );
+            }
         }
 
-        public Task<bool> CancelReservationAsync(int reservationId)
+        public async Task<bool> CancelReservationAsync(int reservationId)
         {
-            throw new NotImplementedException();
+            var reservation = await _unitOfWork.Reservations.GetAsync(reservationId);
+            if (reservation == null) return false;
+
+            // Prevent cancellation of confirmed reservations
+            if (reservation.Status == ReservationStatus.Confirmed)
+            {
+                throw new InvalidOperationException("Cannot cancel a confirmed reservation.");
+            }
+
+            reservation.Status = ReservationStatus.Cancelled;
+            await _unitOfWork.SaveAsync();
+            return true;
         }
     }
 }

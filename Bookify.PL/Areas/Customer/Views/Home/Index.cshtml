@@ -1,4 +1,4 @@
-﻿@model SearchVM
+﻿@model HomeVM
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -30,13 +30,18 @@
         </div>
 
         <div class="search-form-container">
-            <form class="search-form" id="searchForm" role="search">
+            <form class="search-form" id="searchForm" role="search" method="get" action="@Url.Action("Search", "Hotel", new { area = "Customer" })">
+                <!-- Hidden Inputs for Dates -->
+                <input type="hidden" name="checkInDate" id="checkInDateHidden" />
+                <input type="hidden" name="checkOutDate" id="checkOutDateHidden" />
+
                 <!-- Destination Input -->
                 <div class="form-group">
                     <input type="text"
                            class="form-control"
                            placeholder="Where are you going?"
                            id="destination"
+                           name="location"
                            autocomplete="off"
                            required>
                 </div>
@@ -47,7 +52,7 @@
                         <div class="date-input-group">
                             <span class="date-label">Check In</span>
                             <input type="text"
-                                   placeholder="Sun, 26 Oct 2025"
+                                   placeholder="Select Date"
                                    class="date-input"
                                    id="checkin"
                                    autocomplete="off"
@@ -58,7 +63,7 @@
                         <div class="date-input-group">
                             <span class="date-label">Check Out</span>
                             <input type="text"
-                                   placeholder="Mon, 10 Nov 2025"
+                                   placeholder="Select Date"
                                    class="date-input"
                                    id="checkout"
                                    autocomplete="off"
@@ -133,7 +138,7 @@
 
                 <!-- Guests Selector -->
                 <div class="form-group">
-                    <select id="guests" class="form-select" aria-label="Select number of guests">
+                    <select id="guests" name="guestCount" class="form-select" aria-label="Select number of guests">
                         <option value="1">1 adult</option>
                         <option value="2" selected>2 adults</option>
                         <option value="3">3 adults</option>
@@ -151,12 +156,275 @@
     </div>
 </div>
 
+<!-- ======================= -->
+<!-- FEATURES SECTION -->
+<!-- ======================= -->
+<section class="features-section">
+    <div class="container">
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-plane-departure"></i>
+                    <div class="feature-badge">01</div>
+                </div>
+                <h3 class="feature-title">Best Travel Deals in Egypt</h3>
+                <p class="feature-description">Discover exclusive offers and unbeatable prices on hotels across Egypt</p>
+            </div>
 
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-search-location"></i>
+                    <div class="feature-badge">02</div>
+                </div>
+                <h3 class="feature-title">Thousands of Flights & Hotel Deals</h3>
+                <p class="feature-description">Access a vast selection of accommodations to find your perfect stay</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <div class="feature-badge">03</div>
+                </div>
+                <h3 class="feature-title">Local Payments, Lower Fees</h3>
+                <p class="feature-description">Pay with your local bank card without extra charges or restrictions</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                    <div class="feature-badge">04</div>
+                </div>
+                <h3 class="feature-title">24/7 Customer Service Support</h3>
+                <p class="feature-description">Our dedicated team is always ready to assist you anytime, anywhere</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================= -->
+<!-- SECTION 1: FEATURED HOTELS -->
+<!-- ======================= -->
+@if (Model.FeaturedHotels.Any())
+{
+    <section class="hotels-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Hotels</h2>
+            </div>
+            
+            <div class="hotels-carousel-wrapper">
+                <button class="carousel-nav-btn prev" data-carousel="featured">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="hotels-carousel" id="featuredCarousel">
+                    @foreach (var hotel in Model.FeaturedHotels)
+                    {
+                        <div class="hotel-card">
+                            <a href="@Url.Action("GetHotel", "Hotel", new { area = "Customer", id = hotel.Id })" style="text-decoration: none; color: inherit;">
+                                <div class="hotel-image">
+                                    @if (!string.IsNullOrEmpty(hotel.MainImage))
+                                    {
+                                        <img src="@hotel.MainImage" alt="@hotel.Name" loading="lazy">
+                                    }
+                                    else
+                                    {
+                                        <div class="hotel-image-placeholder">
+                                            <i class="fas fa-hotel"></i>
+                                        </div>
+                                    }
+                                    @if (hotel.IsFeatured)
+                                    {
+                                        <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+                                    }
+                                </div>
+                            </a>
+                            <div class="hotel-info">
+                                <a href="@Url.Action("GetHotel", "Hotel", new { area = "Customer", id = hotel.Id })" style="text-decoration: none; color: inherit;">
+                                    <h3 class="hotel-name">@hotel.Name</h3>
+                                </a>
+                                <div class="hotel-stars">
+                                    @for (int i = 0; i < hotel.StarRating; i++)
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                </div>
+                                <div class="hotel-rating">
+                                    @if (hotel.UserRating > 0)
+                                    {
+                                        var ratingClass = hotel.UserRating >= 9 ? "excellent" : hotel.UserRating >= 8 ? "very-good" : "good";
+                                        <span class="rating-score @ratingClass">@hotel.UserRating.ToString("0.0")</span>
+                                        @if (hotel.ReviewCount > 0)
+                                        {
+                                            <span class="review-count">@hotel.ReviewCount reviews</span>
+                                        }
+                                    }
+                                </div>
+                                @if (hotel.RoomTypes.Any())
+                                {
+                                    var minPrice = hotel.RoomTypes.Min(rt => rt.BasePrice);
+                                    <div class="hotel-price">
+                                        <span class="price-label">Per night</span>
+                                        <span class="price-amount">EGP @minPrice.ToString("N0")</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+                
+                <button class="carousel-nav-btn next" data-carousel="featured">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+}
+
+<!-- ======================= -->
+<!-- SECTION 2: HOTELS IN SPECIFIC CITY -->
+<!-- ======================= -->
+@if (Model.CityHotels.Any() && !string.IsNullOrEmpty(Model.FeaturedCityName))
+{
+    <section class="hotels-section city-hotels">
+        <div class="container">
+            <div class="section-header">
+                <h2>Popular Hotels in @Model.FeaturedCityName</h2>
+            </div>
+            
+            <div class="hotels-carousel-wrapper">
+                <button class="carousel-nav-btn prev" data-carousel="city">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="hotels-carousel" id="cityCarousel">
+                    @foreach (var hotel in Model.CityHotels)
+                    {
+                        <div class="hotel-card">
+                            <a href="@Url.Action("GetHotel", "Hotel", new { area = "Customer", id = hotel.Id })" style="text-decoration: none; color: inherit;">
+                                <div class="hotel-image">
+                                    @if (!string.IsNullOrEmpty(hotel.MainImage))
+                                    {
+                                        <img src="@hotel.MainImage" alt="@hotel.Name" loading="lazy">
+                                    }
+                                    else
+                                    {
+                                        <div class="hotel-image-placeholder">
+                                            <i class="fas fa-hotel"></i>
+                                        </div>
+                                    }
+                                </div>
+                            </a>
+                            <div class="hotel-info">
+                                <a href="@Url.Action("GetHotel", "Hotel", new { area = "Customer", id = hotel.Id })" style="text-decoration: none; color: inherit;">
+                                    <h3 class="hotel-name">@hotel.Name</h3>
+                                </a>
+                                <div class="hotel-stars">
+                                    @for (int i = 0; i < hotel.StarRating; i++)
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                </div>
+                                <div class="hotel-rating">
+                                    @if (hotel.UserRating > 0)
+                                    {
+                                        var ratingClass = hotel.UserRating >= 9 ? "excellent" : hotel.UserRating >= 8 ? "very-good" : "good";
+                                        <span class="rating-score @ratingClass">@hotel.UserRating.ToString("0.0")</span>
+                                        @if (hotel.ReviewCount > 0)
+                                        {
+                                            <span class="review-count">@hotel.ReviewCount reviews</span>
+                                        }
+                                    }
+                                </div>
+                                @if (hotel.RoomTypes.Any())
+                                {
+                                    var minPrice = hotel.RoomTypes.Min(rt => rt.BasePrice);
+                                    <div class="hotel-price">
+                                        <span class="price-label">Per night</span>
+                                        <span class="price-amount">EGP @minPrice.ToString("N0")</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+                
+                <button class="carousel-nav-btn next" data-carousel="city">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+}
+
+
+<!-- ======================= -->
+<!-- SECTION 4: CITIES GALLERY -->
+<!-- ======================= -->
+@if (Model.FeaturedCities.Any())
+{
+    <section class="cities-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Popular Destinations</h2>
+                <p>Discover amazing cities across Egypt</p>
+            </div>
+            
+            <div class="cities-grid">
+                @foreach (var city in Model.FeaturedCities)
+                {
+                    <div class="city-card">
+                        <a href="@Url.Action("Search", "Hotel", new { area = "Customer", location = city.Name })" style="text-decoration: none; color: inherit; display: block; height: 100%;">
+                            <div class="city-image">
+                                @if (!string.IsNullOrEmpty(city.Image))
+                                {
+                                    <img src="@city.Image" alt="@city.Name" loading="lazy">
+                                }
+                                else
+                                {
+                                    <div class="city-image-placeholder">
+                                        <i class="fas fa-city"></i>
+                                    </div>
+                                }
+                                <div class="city-overlay">
+                                    <h3 class="city-name">@city.Name</h3>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
 
 <!-- ======================= -->
 <!-- SCRIPTS -->
 <!-- ======================= -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/javascript/main.js"></script>
+    <script src="~/javascript/main.js" asp-append-version="true"></script>
+    <script src="~/javascript/carousel.js" asp-append-version="true"></script>
+    <script>
+        // Ensure hidden inputs are updated before submit
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('searchForm');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    if (window.combinedCalendar) {
+                        window.combinedCalendar.updateInputs();
+                    }
+                });
+            }
+        });
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/home-sections.css" />
 }

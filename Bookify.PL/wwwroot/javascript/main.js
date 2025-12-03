@@ -34,6 +34,25 @@ class CombinedCalendar {
         ];
 
         this.init();
+
+        // Check for initial values in hidden inputs (for search results page)
+        const checkInHidden = document.getElementById('checkInDateHidden');
+        const checkOutHidden = document.getElementById('checkOutDateHidden');
+
+        if (checkInHidden && checkInHidden.value) {
+            this.checkinDate = new Date(checkInHidden.value);
+            this.checkinDate.setHours(0, 0, 0, 0);
+        }
+
+        if (checkOutHidden && checkOutHidden.value) {
+            this.checkoutDate = new Date(checkOutHidden.value);
+            this.checkoutDate.setHours(0, 0, 0, 0);
+        }
+
+        if (this.checkinDate || this.checkoutDate) {
+            this.updateInputs();
+            this.renderCalendar();
+        }
     }
 
     init() {
@@ -271,11 +290,41 @@ class CombinedCalendar {
     }
 
     updateInputs() {
+        // Update visible inputs
         if (this.checkinDate) {
             this.checkinInput.value = this.formatDate(this.checkinDate);
+
+            // Update hidden input for form submission
+            const hiddenCheckin = document.getElementById('checkInDateHidden');
+            if (hiddenCheckin) {
+                const date = this.checkinDate;
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                hiddenCheckin.value = `${year}-${month}-${day}`;
+            }
+        } else {
+            this.checkinInput.value = '';
+            const hiddenCheckin = document.getElementById('checkInDateHidden');
+            if (hiddenCheckin) hiddenCheckin.value = '';
         }
+
         if (this.checkoutDate) {
             this.checkoutInput.value = this.formatDate(this.checkoutDate);
+
+            // Update hidden input for form submission
+            const hiddenCheckout = document.getElementById('checkOutDateHidden');
+            if (hiddenCheckout) {
+                const date = this.checkoutDate;
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                hiddenCheckout.value = `${year}-${month}-${day}`;
+            }
+        } else {
+            this.checkoutInput.value = '';
+            const hiddenCheckout = document.getElementById('checkOutDateHidden');
+            if (hiddenCheckout) hiddenCheckout.value = '';
         }
     }
 
@@ -328,10 +377,10 @@ class CombinedCalendar {
 }
 
 // Initialize calendar
-let combinedCalendar;
+window.combinedCalendar = null;
 
 document.addEventListener('DOMContentLoaded', function () {
-    combinedCalendar = new CombinedCalendar();
+    window.combinedCalendar = new CombinedCalendar();
     console.log('✅ Combined Calendar initialized!');
 });
 

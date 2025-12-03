@@ -1,11 +1,13 @@
 ﻿using Bookify.BL.Interfaces;
 using Bookify.Models;
 using Bookify.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookify.PL.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Admin_Role)]
     public class CountryController : Controller
     {
         private readonly ICountryService _countryService;
@@ -42,15 +44,22 @@ namespace Bookify.PL.Areas.Admin.Controllers
                 var isCountryExist = await _countryService.GetCountryAsync(u => u.CountryName == country.CountryName);
                 if (isCountryExist == null)
                 {
-                    await _countryService.AddCountryAsync(country);
-                    TempData["success"] = "Country added successfully.";
-                    return RedirectToAction(nameof(Index));
+                    var result = await _countryService.AddCountryAsync(country);
+                    if (result)
+                    {
+                        TempData["success"] = "Country added successfully.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    TempData["error"] = "Failed to add country.";
                 }
-                TempData["Fail"] = "Country Already Exist";
+                else
+                {
+                    TempData["error"] = "Country Already Exist";
+                }
             }
             catch
             {
-                TempData["Fail"] = "Country Already Exist";
+                TempData["error"] = "Failed to add country.";
             }
 
             return View(country);
@@ -65,7 +74,6 @@ namespace Bookify.PL.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            ViewBag.CountriesList = AllCountries.CountryList;
             return View(country);
         }
 
@@ -80,7 +88,6 @@ namespace Bookify.PL.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.CountriesList = AllCountries.CountryList;
                 return View(country);
             }
 

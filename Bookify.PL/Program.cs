@@ -1,6 +1,7 @@
 using Bookify.BL.Interfaces;
 using Bookify.BL.Services;
 using Bookify.DL.Data;
+using Bookify.DL.DbInitializer;
 using Bookify.DL.Repository;
 using Bookify.DL.Repository.IRepository;
 using Bookify.Models;
@@ -28,9 +29,13 @@ builder.Services.AddIdentity<Customer, IdentityRole>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<IHotelService, HotelService>();
+
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
@@ -38,8 +43,11 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
+builder.Services.AddScoped<IRoomImageService, RoomImageService>();
+builder.Services.AddScoped<IHotelImageService, HotelImageService>();
 
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+Stripe.StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 
 
@@ -82,6 +90,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+SeedDatabase();
+
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
@@ -89,3 +99,13 @@ app.MapControllerRoute(
 
 
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}
+

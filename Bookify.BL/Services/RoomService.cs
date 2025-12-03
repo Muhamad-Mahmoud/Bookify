@@ -4,12 +4,13 @@ using Bookify.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Bookify.BL.Services
 {
-    public class RoomService :IRoomService
+    public class RoomService : IRoomService
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -18,9 +19,9 @@ namespace Bookify.BL.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Room>> GetAllRoomsAsync()
+        public async Task<IEnumerable<Room>> GetAllRoomsAsync(Expression<Func<Room, bool>>? filter = null, string? includeProperties = null)
         {
-            return await _unitOfWork.Rooms.GetAllAsync();
+            return await _unitOfWork.Rooms.GetAllAsync(filter,includeProperties);
         }
 
         public async Task<Room?> GetRoomByIdAsync(int id)

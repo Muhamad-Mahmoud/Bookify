@@ -9,19 +9,14 @@ namespace Bookify.BL.Interfaces
 {
     public interface IReservationService
     {
-        // Pre-payment operations
-        Task<bool> CheckAvailabilityAsync(int roomId, DateTime date);
-        Task<int> CreatePendingReservationAsync(int roomId, string userId);
-        Task<decimal> CalculatePrice(int roomId, DateTime startDate, DateTime endDate);
+        Task<int> CreateReservationAsync(string userId, int roomTypeId, DateTime checkInDate, DateTime checkOutDate);
+        Task<decimal> CalculatePrice(int roomTypeId, DateTime checkIn, DateTime checkOut);
 
-        
-        // Post-payment operations
         Task<bool> ConfirmReservationAsync(int reservationId, string paymentIntentId);
         Task<bool> CancelReservationAsync(int reservationId);
 
-        
-        // Retrieval operations
         Task<Reservation?> GetReservationByIdAsync(int reservationId);
         Task<IEnumerable<Reservation>> GetReservationsForUserAsync(string userId);
+        Task<IEnumerable<Reservation>> GetAllReservationsAsync(string? ownerId = null);
     }
 }

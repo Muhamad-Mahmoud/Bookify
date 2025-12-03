@@ -1,4 +1,5 @@
 ﻿using Bookify.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace Bookify.BL.Interfaces
         Task<bool> AddCityAsync(City City);
         Task<bool> UpdateCityAsync(City City);
         Task<bool> DeleteCityAsync(int id);
+        
+        Task<string?> UploadCityImage(IFormFile imageFile, int cityId, string? oldImagePath = null);
     }
 }

@@ -1,0 +1,262 @@
+@model Bookify.Models.ViewModels.RoomTypeVM
+
+<link rel="stylesheet" href="~/css/admin-forms.css" />
+
+<div class="container mt-4">
+
+    <!-- Main Card -->
+    <div class="card form-card mx-auto">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-layer-group icon-spacing"></i> Add Room Type
+            </h5>
+            <p class="card-header-subtitle">Create a new room category</p>
+        </div>
+
+        <div class="card-body">
+            <form method="post" asp-action="Add" enctype="multipart/form-data">
+
+                <!-- Name -->
+                <div class="form-group mb-3">
+                    <label asp-for="RoomType.Name" class="form-label">
+                        Room Type Name <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text"
+                           asp-for="RoomType.Name"
+                           class="form-control"
+                           placeholder="e.g., Deluxe, Superior, Suite"
+                           required />
+
+                    <span asp-validation-for="RoomType.Name"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group mb-3">
+                    <label asp-for="RoomType.Description" class="form-label">
+                        Description <span class="text-danger">*</span>
+                    </label>
+
+                    <textarea asp-for="RoomType.Description"
+                              class="form-control"
+                              placeholder="Describe the room type features and amenities..."
+                              rows="3"
+                              required></textarea>
+
+                    <span asp-validation-for="RoomType.Description"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Size -->
+                <div class="form-group mb-3">
+                    <label asp-for="RoomType.Size" class="form-label">
+                        Room Size (m²) <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="number"
+                           asp-for="RoomType.Size"
+                           class="form-control"
+                           placeholder="e.g., 30"
+                           min="1"
+                           required />
+
+                    <span asp-validation-for="RoomType.Size"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Max Guests -->
+                <div class="form-group mb-3">
+                    <label asp-for="RoomType.MaxGuests" class="form-label">
+                        Max Guests <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="number"
+                           asp-for="RoomType.MaxGuests"
+                           class="form-control"
+                           placeholder="e.g., 2"
+                           min="1"
+                           max="10"
+                           required />
+
+                    <span asp-validation-for="RoomType.MaxGuests"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Bed Type -->
+                <div class="form-group mb-3">
+                    <label asp-for="RoomType.BedType" class="form-label">
+                        Bed Type <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text"
+                           asp-for="RoomType.BedType"
+                           class="form-control"
+                           placeholder="e.g., King, Twin, Queen"
+                           required />
+
+                    <span asp-validation-for="RoomType.BedType"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Base Price -->
+                <div class="form-group mb-3">
+                    <label asp-for="RoomType.BasePrice" class="form-label">
+                        Base Price per Night <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="number"
+                           asp-for="RoomType.BasePrice"
+                           class="form-control"
+                           placeholder="e.g., 150"
+                           step="0.01"
+                           min="0.01"
+                           required />
+
+                    <span asp-validation-for="RoomType.BasePrice"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Amenities -->
+                <div class="form-group mb-3">
+                    <label asp-for="RoomType.Amenities" class="form-label">
+                        Amenities (Optional)
+                    </label>
+
+                    <textarea asp-for="RoomType.Amenities"
+                              class="form-control"
+                              placeholder="WiFi, AC, TV, Mini Bar, etc. (comma-separated)"
+                              rows="2"></textarea>
+
+                    <span asp-validation-for="RoomType.Amenities"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Main Image -->
+                <div class="form-group mb-3">
+                    <label for="MainImageFile" class="form-label">
+                        Main Image (Optional)
+                    </label>
+                    <small class="text-muted d-block mb-2">Select the primary image for this room type</small>
+
+                    <input type="file"
+                           id="MainImageFile"
+                           name="MainImageFile"
+                           class="form-control"
+                           accept="image/*"
+                           onchange="previewMainImage(event)" />
+
+                    <div class="form-text">
+                        <i class="fas fa-info-circle"></i> This will be the main display image for the room type
+                    </div>
+
+                    <!-- Main Image Preview -->
+                    <div id="mainImagePreview" class="mt-3" style="display: none;">
+                        <label class="form-label text-muted small">Preview:</label>
+                        <img id="mainPreview" src="#" alt="Main Image Preview" 
+                             style="max-width: 400px; max-height: 250px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+                    </div>
+                </div>
+
+                <!-- Gallery Images -->
+                <div class="form-group mb-3">
+                    <label for="GalleryImages" class="form-label">
+                        Gallery Images (Optional)
+                    </label>
+                    <small class="text-muted d-block mb-2">Select multiple images for the room type gallery</small>
+
+                    <input type="file"
+                           id="GalleryImages"
+                           name="GalleryImages"
+                           class="form-control"
+                           accept="image/*"
+                           multiple
+                           onchange="previewGalleryImages(event)" />
+
+                    <div class="form-text">
+                        <i class="fas fa-info-circle"></i> You can select multiple images at once. Supported formats: JPG, PNG, GIF, WebP
+                    </div>
+
+                    <!-- Gallery Images Preview -->
+                    <div id="galleryPreview" class="mt-3" style="display: none;">
+                        <label class="form-label text-muted small">Gallery Preview:</label>
+                        <div id="galleryContainer" class="d-flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Hotel -->
+                <div class="form-group mb-3">
+                    <label asp-for="RoomType.HotelId" class="form-label">
+                        Hotel <span class="text-danger">*</span>
+                    </label>
+
+                    <select asp-for="RoomType.HotelId"
+                            asp-items="@Model.Hotels"
+                            class="form-control"
+                            required>
+                        <option value="">-- Select a Hotel --</option>
+                    </select>
+
+                    <span asp-validation-for="RoomType.HotelId"
+                          class="text-danger small"></span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check me-1"></i> Save
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        function previewMainImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('mainPreview').src = e.target.result;
+                    document.getElementById('mainImagePreview').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewGalleryImages(event) {
+            const files = event.target.files;
+            const container = document.getElementById('galleryContainer');
+            container.innerHTML = '';
+            
+            if (files.length > 0) {
+                document.getElementById('galleryPreview').style.display = 'block';
+                
+                Array.from(files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.maxWidth = '150px';
+                        img.style.maxHeight = '150px';
+                        img.style.borderRadius = '8px';
+                        img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                        img.style.objectFit = 'cover';
+                        container.appendChild(img);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+    </script>
+}

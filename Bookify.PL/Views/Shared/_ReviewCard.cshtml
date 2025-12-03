@@ -1,0 +1,21 @@
+@model Bookify.Models.ViewModels.ReviewViewModel
+
+<article class="review-card hover-lift" itemscope itemtype="https://schema.org/Review">
+    <header class="review-header">
+        <div class="reviewer-info">
+            <div class="reviewer-avatar" aria-hidden="true">@Model.ReviewerInitials</div>
+            <div class="reviewer-details">
+                <h4 itemprop="author">@Model.ReviewerName</h4>
+                <p>@Model.Country • @Model.Date.ToString("MMMM yyyy")</p>
+            </div>
+        </div>
+        <div class="review-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+            <meta itemprop="ratingValue" content="@Model.Rating" />
+            @Model.Rating
+        </div>
+    </header>
+    <p class="review-text" itemprop="reviewBody">@Model.Text</p>
+    <time class="review-date" datetime="@Model.Date.ToString("yyyy-MM-dd")">
+        Reviewed: @Model.Date.ToString("MMMM dd, yyyy")
+    </time>
+</article>

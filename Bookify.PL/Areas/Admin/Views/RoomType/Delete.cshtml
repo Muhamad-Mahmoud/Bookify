@@ -1,0 +1,92 @@
+@model RoomType
+
+<link rel="stylesheet" href="~/css/admin-forms.css" />
+
+<style>
+    /* Delete-specific overrides */
+    .form-card .card-header {
+        background: var(--danger-gradient);
+    }
+</style>
+
+<div class="container mt-4">
+
+    <!-- Main Card -->
+    <div class="card form-card mx-auto">
+        
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-info-circle icon-spacing"></i> Confirm Deletion
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Room Type Info Display -->
+            <div class="info-box">
+                <div class="info-box-label">Room Type Name</div>
+                <div class="info-box-value">
+                    @Model.Name
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-label">Description</div>
+                <div class="info-box-value">
+                    @Model.Description
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-label">Size (m²)</div>
+                <div class="info-box-value">
+                    @Model.Size
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-label">Max Guests</div>
+                <div class="info-box-value">
+                    @Model.MaxGuests
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-label">Bed Type</div>
+                <div class="info-box-value">
+                    @Model.BedType
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-label">Base Price</div>
+                <div class="info-box-value">
+                    @Model.BasePrice.ToString("C")
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-label">Room Type ID</div>
+                <div style="font-size: 0.9rem; color: #9ca3af; margin-top: 0.5rem; font-family: monospace;">
+                    @Model.Id
+                </div>
+            </div>
+
+            <form method="post" asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times icon-spacing"></i>No, Cancel
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash icon-spacing"></i>Yes, Delete
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>

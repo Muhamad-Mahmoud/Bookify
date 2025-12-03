@@ -11,7 +11,7 @@ namespace Bookify.BL.Services
 {
     public class PaymentService : IPaymentService
     {
-        public Session CreateCheckoutSession(Room room, string domain)
+        public Session CreateCheckoutSession(Reservation reservation, RoomType roomType, string domain)
         {
             var options = new SessionCreateOptions
             {
@@ -22,28 +22,24 @@ namespace Bookify.BL.Services
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = (long)((room.Price) * 100),
-                            Currency = "usd",
+                            UnitAmount = (long)((reservation.TotalPrice) * 100),
+                            Currency = "egp",
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
-                                Name = $"Room: {room.RoomName}",
-                                Images = new List<string>
-                                {
-                                    room.ImageURL ?? ""
-                                }
+                                Name = $"Room Type: {roomType.Name} ({reservation.CheckInDate:MMM dd} - {reservation.CheckOutDate:MMM dd})",
+                                
                             }
                         },
                         Quantity = 1
                     }
                 },
                 Mode = "payment",
-                SuccessUrl = $"{domain}Payment/Success?roomId={room.Id}",
-                CancelUrl = $"{domain}Payment/Cancel"
+                SuccessUrl = $"{domain}Customer/Booking/Confirmation?reservationId={reservation.Id}",
+                CancelUrl = $"{domain}Customer/Booking/Cancel?reservationId={reservation.Id}"
             };
 
             var service = new SessionService();
             return service.Create(options);
         }
-
     }
 }

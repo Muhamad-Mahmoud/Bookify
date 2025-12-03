@@ -1,0 +1,498 @@
+﻿/* ============================================
+   Dashboard Layout Styles
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f8f9fa;
+    color: #333;
+}
+
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ============================================
+   Sidebar Styles
+   ============================================ */
+
+.dashboard-sidebar {
+    width: 260px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.sidebar-brand {
+    padding: 0 20px 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.sidebar-brand i {
+    font-size: 1.8rem;
+}
+
+.sidebar-menu-section {
+    margin-bottom: 30px;
+}
+
+.sidebar-menu-title {
+    padding: 0 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.7;
+    margin-bottom: 12px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-menu a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-left-color: white;
+}
+
+.sidebar-menu a i {
+    width: 20px;
+    margin-right: 12px;
+    text-align: center;
+}
+
+/* ============================================
+   Main Content Area
+   ============================================ */
+
+.dashboard-main {
+    flex: 1;
+    margin-left: 260px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================
+   Top Navigation Bar
+   ============================================ */
+
+.dashboard-navbar {
+    background: white;
+    border-bottom: 1px solid #eee;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+}
+
+.navbar-toggle:hover {
+    color: #764ba2;
+}
+
+.navbar-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: #f5f5f5;
+    border-radius: 25px;
+}
+
+.navbar-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.navbar-user-email {
+    font-size: 0.85rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.navbar-user-dropdown {
+    position: relative;
+}
+
+.navbar-user-dropdown a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.navbar-user-dropdown a:hover {
+    color: #764ba2;
+}
+
+.navbar-user-dropdown button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #667eea;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-user-dropdown button:hover {
+    color: #764ba2;
+}
+
+/* ============================================
+   Dashboard Content
+   ============================================ */
+
+.dashboard-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* ============================================
+   Scrollbar Styles
+   ============================================ */
+
+.dashboard-sidebar::-webkit-scrollbar,
+.dashboard-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dashboard-sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.dashboard-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.dashboard-content::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 4px;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* ============================================
+   Dashboard Page Styles
+   ============================================ */
+
+.dashboard-page {
+    padding: 20px 0;
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    color: #999;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ============================================
+   Stat Cards
+   ============================================ */
+
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.stat-icon-hotel {
+    color: #667eea;
+    font-size: 1.8rem;
+}
+
+.stat-icon-reservation {
+    color: #10b981;
+    font-size: 1.8rem;
+}
+
+.stat-icon-room {
+    color: #f59e0b;
+    font-size: 1.8rem;
+}
+
+.stat-icon-revenue {
+    color: #ef4444;
+    font-size: 1.8rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.stat-change {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.stat-change.positive {
+    color: #10b981;
+}
+
+/* ============================================
+   Dashboard Cards
+   ============================================ */
+
+.dashboard-card {
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dashboard-card .card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 15px 20px;
+}
+
+.dashboard-card .card-body {
+    padding: 20px;
+}
+
+/* ============================================
+   Quick Actions
+   ============================================ */
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    width: 100%;
+}
+
+.quick-action-btn:hover {
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.quick-action-btn i {
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   Activity List
+   ============================================ */
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-list li {
+    padding: 12px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.activity-list li:last-child {
+    border-bottom: none;
+}
+
+.activity-badge {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ============================================
+   Table Styles
+   ============================================ */
+
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead {
+    background: #f5f5f5;
+}
+
+.table th {
+    border: none;
+    padding: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.table td {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+    .dashboard-sidebar {
+        width: 0;
+        padding: 0;
+        position: fixed;
+        height: 100vh;
+        transition: width 0.3s ease;
+        z-index: 1001;
+    }
+
+    .dashboard-sidebar.active {
+        width: 260px;
+    }
+
+    .dashboard-main {
+        margin-left: 0;
+    }
+
+    .navbar-toggle {
+        display: block;
+    }
+
+    .dashboard-navbar {
+        padding: 0 15px;
+    }
+
+    .navbar-user-email {
+        display: none;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+}
+

@@ -18,9 +18,19 @@ namespace Bookify.BL.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Invoice>> GetAllInvoicesAsync()
+        public async Task<IEnumerable<Invoice>> GetAllInvoicesAsync(string? ownerId = null)
         {
-            return await _unitOfWork.Invoices.GetAllAsync();
+            if (string.IsNullOrEmpty(ownerId)) // Admin
+            {
+                return await _unitOfWork.Invoices.GetAllAsync(includeProperties: "Customer,Hotel,Reservation");
+            }
+            else // Owner
+            {
+                return await _unitOfWork.Invoices.GetAllAsync(
+                    i => i.Hotel.OwnerId == ownerId,
+                    includeProperties: "Customer,Hotel,Reservation"
+                );
+            }
         }
 
         public async Task<Invoice?> GetInvoiceByIdAsync(int id)
@@ -34,26 +44,6 @@ namespace Bookify.BL.Services
                 return false;
 
             await _unitOfWork.Invoices.AddAsync(invoice);
-            await _unitOfWork.SaveAsync();
-            return true;
-        }
-        public async Task<bool> UpdateInvoiceAsync(Invoice invoice)
-        {
-            if (invoice == null)
-                return false;
-
-            _unitOfWork.Invoices.Update(invoice);
-            await _unitOfWork.SaveAsync();
-            return true;
-        }
-
-        public async Task<bool> DeleteInvoiceAsync(int id)
-        {
-            var Invoice = await _unitOfWork.Invoices.GetAsync(id);
-            if (Invoice == null)
-                return false;
-
-            _unitOfWork.Invoices.Remove(Invoice);
             await _unitOfWork.SaveAsync();
             return true;
         }

@@ -1,0 +1,96 @@
+@model Bookify.Models.RoomType
+
+@{
+    var count = (int?)ViewData["Count"] ?? 0;
+    var checkInDate = ViewData["CheckInDate"] as DateTime?;
+    var checkOutDate = ViewData["CheckOutDate"] as DateTime?;
+}
+
+<div class="room-card hover-lift">
+    <!-- Image Column -->
+    <div class="room-image-col image-zoom-container">
+        @if (!string.IsNullOrEmpty(Model.MainImage))
+        {
+            <img src="@Model.MainImage" alt="@Model.Name" class="image-zoom" loading="lazy" />
+        }
+        else
+        {
+            <div class="placeholder-image">
+                <i class="fas fa-bed fa-3x" aria-hidden="true"></i>
+            </div>
+        }
+    </div>
+
+    <!-- Details Column -->
+    <div class="room-details-col">
+        <a href="#" class="room-name-link">@Model.Name</a>
+        
+        <div class="room-meta">
+            <div class="meta-item">
+                <i class="fas fa-bed" aria-hidden="true"></i> @Model.BedType
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-ruler-combined" aria-hidden="true"></i> @Model.Size m²
+            </div>
+        </div>
+
+        <div class="room-features-list">
+            <div class="feature-item positive">
+                <i class="fas fa-check" aria-hidden="true"></i>
+                <span class="feature-text">Free cancellation</span>
+            </div>
+            <div class="feature-item positive">
+                <i class="fas fa-check" aria-hidden="true"></i>
+                <span class="feature-text">No prepayment needed</span>
+            </div>
+            <div class="feature-item negative">
+                <i class="fas fa-mug-hot" aria-hidden="true"></i>
+                <span class="feature-text muted">Breakfast not included</span>
+            </div>
+        </div>
+
+        <div class="room-amenities-preview">
+            <div class="amenity-icon" title="Air Conditioning"><i class="fas fa-snowflake" aria-hidden="true"></i></div>
+            <div class="amenity-icon" title="Flat-screen TV"><i class="fas fa-tv" aria-hidden="true"></i></div>
+            <div class="amenity-icon" title="Private Bathroom"><i class="fas fa-bath" aria-hidden="true"></i></div>
+            <div class="amenity-icon" title="Free WiFi"><i class="fas fa-wifi" aria-hidden="true"></i></div>
+            <div class="amenity-icon" title="Mini Bar"><i class="fas fa-glass-martini" aria-hidden="true"></i></div>
+        </div>
+    </div>
+
+    <!-- Price Column -->
+    <div class="room-price-col">
+        <div class="price-guest-info">@Model.MaxGuests guests, 1 night</div>
+        <div class="room-price-amount">EGP @Model.BasePrice.ToString("N0")</div>
+        <div class="price-tax-info">+ taxes and charges</div>
+
+        @if (count > 0)
+        {
+            <form asp-area="Customer" asp-controller="Booking" asp-action="Checkout" method="get">
+                <input type="hidden" name="roomTypeId" value="@Model.Id" />
+                <input type="hidden" name="checkInDate" value="@(checkInDate?.ToString("yyyy-MM-dd"))" />
+                <input type="hidden" name="checkOutDate" value="@(checkOutDate?.ToString("yyyy-MM-dd"))" />
+                <button type="submit" class="btn-reserve">
+                    I'll reserve
+                    <i class="fas fa-chevron-right" style="font-size:0.8rem; margin-left:8px;" aria-hidden="true"></i>
+                </button>
+            </form>
+
+            @if (count <= 5)
+            {
+                <div class="urgency-message">
+                    <i class="fas fa-hourglass-half" aria-hidden="true"></i> Only @count rooms left!
+                </div>
+            }
+        }
+        else
+        {
+            <button class="btn-reserve" disabled style="background: #ccc; cursor: not-allowed; box-shadow: none;">
+                Sold Out
+            </button>
+            <div class="urgency-message" style="color: var(--text-muted); animation: none;">
+                <i class="fas fa-times-circle" aria-hidden="true"></i> Sold out for these dates
+            </div>
+        }
+    </div>
+</div>

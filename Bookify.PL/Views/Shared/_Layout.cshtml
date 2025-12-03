@@ -16,11 +16,14 @@
     
     <!-- Styles - Optimized Load Order -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/identity.css" asp-append-version="true" />
-    @* <link rel="stylesheet" href="~/css/heroSearch.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/public.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="bookify-app">
     <nav class="navbar navbar-expand-lg navbar-dark" role="navigation" aria-label="Main navigation">
@@ -35,42 +38,21 @@
             </button>
             <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between" id="navbarSupportedContent">
                 <ul class="navbar-nav flex-grow-1" role="menubar">
-                    <li class="nav-item" role="none">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" role="menuitem">
-                            <i class="fas fa-home" aria-hidden="true"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown" role="none">
-                        <a class="nav-link dropdown-toggle" href="#" role="menuitem" data-bs-toggle="dropdown" 
-                           aria-expanded="false" aria-haspopup="true">
-                            <i class="fas fa-cog" aria-hidden="true"></i>
-                            <span>Management</span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu" aria-label="Management options">
-                            <li role="none">
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Country" asp-action="Index" role="menuitem">
-                                    <i class="fas fa-globe" aria-hidden="true"></i>
-                                    <span>Countries</span>
-                                </a>
-                            </li>
-                            <li role="none">
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="City" asp-action="Index" role="menuitem">
-                                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-                                    <span>Cities</span>
-                                </a>
-                            </li>
-                            <li role="none"><hr class="dropdown-divider"></li>
-                            <li role="none">
-                                <a class="dropdown-item" href="#" role="menuitem">More Options</a>
-                            </li>
-                        </ul>
-                    </li>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Owner"))
+                    {
+                        <li>
+                            <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index" role="menuitem">
+                                <i class="fas fa-home" aria-hidden="true"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                    }
                 </ul>
                 <div class="navbar-actions" role="region" aria-label="User actions">
                     <partial name="_LoginPartial"></partial>
                 </div>
             </div>
+       
         </div>
     </nav>
 
@@ -137,6 +119,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
     <script src="~/js/site.js" asp-append-version="true" defer></script>
     <script src="~/js/layout-enhancements.js" asp-append-version="true" defer></script>
+    <partial name="_Notification" />
     
     @await RenderSectionAsync("Scripts", required: false)
 </body>

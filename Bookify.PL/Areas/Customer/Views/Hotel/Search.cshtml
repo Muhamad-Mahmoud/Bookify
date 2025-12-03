@@ -1,0 +1,293 @@
+@model Bookify.Models.ViewModels.HotelSearchVM
+
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/hotel-search.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/home-sections.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/javascript/main.js" asp-append-version="true"></script>
+    <script>
+        // Ensure hidden inputs are updated before submit
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('searchForm');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    if (window.combinedCalendar) {
+                        window.combinedCalendar.updateInputs();
+                    }
+                });
+            }
+        });
+    </script>
+}
+
+<div class="search-page-container">
+    <!-- Full Search Box -->
+    <div class="search-box-container mb-4">
+        <div class="search-box" style="margin: 0; max-width: 100%; box-shadow: var(--shadow-md); background-color:white;">
+            <div class="search-form-container">
+                <form class="search-form" id="searchForm" role="search" method="get" action="@Url.Action("Search", "Hotel", new { area = "Customer" })">
+                    <!-- Hidden Inputs for Dates -->
+                    <input type="hidden" name="checkInDate" id="checkInDateHidden" value="@Model.CheckInDate.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="checkOutDate" id="checkOutDateHidden" value="@Model.CheckOutDate.ToString("yyyy-MM-dd")" />
+
+                    <!-- Destination Input -->
+                    <div class="form-group">
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Where are you going?"
+                               id="destination"
+                               name="location"
+                               value="@Model.Location"
+                               autocomplete="off"
+                               required>
+                    </div>
+
+                    <!-- Combined Check-in/Check-out Date Picker -->
+                    <div class="form-group date-range-container">
+                        <div class="date-inputs-wrapper" role="button" tabindex="0">
+                            <div class="date-input-group">
+                                <span class="date-label">Check In</span>
+                                <input type="text"
+                                       placeholder="Select Date"
+                                       class="date-input"
+                                       id="checkin"
+                                       autocomplete="off"
+                                       readonly
+                                       aria-label="Check-in date">
+                            </div>
+                            <div class="date-separator">—</div>
+                            <div class="date-input-group">
+                                <span class="date-label">Check Out</span>
+                                <input type="text"
+                                       placeholder="Select Date"
+                                       class="date-input"
+                                       id="checkout"
+                                       autocomplete="off"
+                                       readonly
+                                       aria-label="Check-out date">
+                            </div>
+                        </div>
+
+                        <!-- Combined Calendar Dropdown -->
+                        <div class="calendar-dropdown-combined" id="combinedCalendar" role="dialog" aria-label="Date picker">
+                            <div class="calendar-navigation">
+                                <button type="button"
+                                        class="calendar-nav-btn"
+                                        id="prevMonthBtn"
+                                        aria-label="Previous month">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button type="button"
+                                        class="calendar-nav-btn"
+                                        id="nextMonthBtn"
+                                        aria-label="Next month">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+
+                            <div class="calendar-months-wrapper">
+                                <!-- First Month -->
+                                <div class="calendar-month-panel">
+                                    <div class="calendar-month-header">
+                                        <h3 id="month1Title">October 2025</h3>
+                                    </div>
+                                    <div class="calendar-weekdays">
+                                        <div class="calendar-weekday">Su</div>
+                                        <div class="calendar-weekday">Mo</div>
+                                        <div class="calendar-weekday">Tu</div>
+                                        <div class="calendar-weekday">We</div>
+                                        <div class="calendar-weekday">Th</div>
+                                        <div class="calendar-weekday">Fr</div>
+                                        <div class="calendar-weekday">Sa</div>
+                                    </div>
+                                    <div class="calendar-days" id="month1Days" role="grid"></div>
+                                </div>
+
+                                <!-- Second Month -->
+                                <div class="calendar-month-panel">
+                                    <div class="calendar-month-header">
+                                        <h3 id="month2Title">November 2025</h3>
+                                    </div>
+                                    <div class="calendar-weekdays">
+                                        <div class="calendar-weekday">Su</div>
+                                        <div class="calendar-weekday">Mo</div>
+                                        <div class="calendar-weekday">Tu</div>
+                                        <div class="calendar-weekday">We</div>
+                                        <div class="calendar-weekday">Th</div>
+                                        <div class="calendar-weekday">Fr</div>
+                                        <div class="calendar-weekday">Sa</div>
+                                    </div>
+                                    <div class="calendar-days" id="month2Days" role="grid"></div>
+                                </div>
+                            </div>
+
+                            <div class="calendar-footer">
+                                <button type="button" class="calendar-clear-btn" id="clearDatesBtn">
+                                    <i class="fas fa-times"></i> Clear
+                                </button>
+                                <button type="button" class="calendar-today-btn" id="todayBtn">
+                                    <i class="fas fa-calendar-day"></i> Today
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guests Selector -->
+                    <div class="form-group">
+                        <select id="guests" name="guestCount" class="form-select" aria-label="Select number of guests">
+                            <option value="1" selected="@(Model.GuestCount == 1)">1 adult</option>
+                            <option value="2" selected="@(Model.GuestCount == 2)">2 adults</option>
+                            <option value="3" selected="@(Model.GuestCount == 3)">3 adults</option>
+                            <option value="4" selected="@(Model.GuestCount == 4)">4 adults</option>
+                            <option value="5" selected="@(Model.GuestCount >= 5)">5+ adults</option>
+                        </select>
+                    </div>
+
+                    <!-- Search Button -->
+                    <button type="submit" class="btn-search">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar Filters (Optional placeholder for now) -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Filter by</h5>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Price Range</label>
+                        <input type="range" class="form-range" min="0" max="10000">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Star Rating</label>
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="star5">
+                                <label class="form-check-label" for="star5">5 Stars</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="star4">
+                                <label class="form-check-label" for="star4">4 Stars</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Map Widget Placeholder -->
+            <div class="card shadow-sm border-0 overflow-hidden mb-4">
+                <div style="height: 150px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #777;">
+                    <i class="fas fa-map-marked-alt fa-3x"></i>
+                </div>
+                <div class="card-body text-center">
+                    <a href="#" class="btn btn-outline-primary btn-sm w-100">Show on map</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results List -->
+        <div class="col-lg-9">
+            <!-- Top Filter Bar -->
+            <div class="filter-bar">
+                <button class="filter-btn active">Recommended</button>
+                <button class="filter-btn">Price <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></button>
+                <button class="filter-btn">Guest Rating <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></button>
+                <button class="filter-btn">Distance <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></button>
+                <button class="filter-btn">Stars <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></button>
+            </div>
+
+            @if (Model.Hotels != null && Model.Hotels.Any())
+            {
+                @foreach (var hotel in Model.Hotels)
+                {
+                    var minPrice = hotel.RoomTypes.Any() ? hotel.RoomTypes.Min(rt => rt.BasePrice) : 0;
+                    
+                    <div class="hotel-search-card">
+                        <!-- Image Column -->
+                        <div class="hotel-card-image">
+                            <img src="@(string.IsNullOrEmpty(hotel.MainImage) ? "/images/placeholder-hotel.jpg" : hotel.MainImage)" alt="@hotel.Name">
+                            <button class="card-wishlist-btn" aria-label="Add to wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+
+                        <!-- Details Column -->
+                        <div class="hotel-card-details">
+                            <div class="hotel-card-header">
+                                <div>
+                                    <a href="@Url.Action("GetHotel", "Hotel", new { id = hotel.Id, checkInDate = Model.CheckInDate.ToString("yyyy-MM-dd"), checkOutDate = Model.CheckOutDate.ToString("yyyy-MM-dd"), guestCount = Model.GuestCount })" class="hotel-name">
+                                        @hotel.Name
+                                    </a>
+                                    <div class="hotel-stars">
+                                        @for (int i = 0; i < hotel.StarRating; i++)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        <span class="text-muted ms-2" style="font-size: 0.8rem;">Hotel</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hotel-location">
+                                <i class="fas fa-map-marker-alt text-primary"></i>
+                                <span>@hotel.Address, @hotel.City?.Name</span>
+                                <a href="#" class="ms-2">Show on map</a>
+                            </div>
+
+                            <div class="hotel-description-preview">
+                                @hotel.Description
+                            </div>
+
+                            <div class="hotel-features">
+                                <div class="feature-item"><i class="fas fa-check"></i> Free cancellation</div>
+                                <div class="feature-item"><i class="fas fa-check"></i> No prepayment needed</div>
+                                <div class="feature-item"><i class="fas fa-check"></i> Breakfast included</div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing Column -->
+                        <div class="hotel-card-pricing">
+                            <div class="review-badge">
+                                <div class="text-end">
+                                    <div class="review-text">@(hotel.UserRating >= 9 ? "Excellent" : hotel.UserRating >= 8 ? "Very Good" : "Good")</div>
+                                    <div class="review-count">@hotel.ReviewCount reviews</div>
+                                </div>
+                                <div class="review-score">@hotel.UserRating.ToString("0.0")</div>
+                            </div>
+
+                            <div class="price-section">
+                                <div class="price-label">1 night, @Model.GuestCount adults</div>
+                                <div class="price-amount">EGP @minPrice.ToString("N0")</div>
+                                <div class="price-taxes">+EGP @((minPrice * 0.14m).ToString("N0")) taxes and charges</div>
+                                
+                                <a href="@Url.Action("GetHotel", "Hotel", new { id = hotel.Id, checkInDate = Model.CheckInDate.ToString("yyyy-MM-dd"), checkOutDate = Model.CheckOutDate.ToString("yyyy-MM-dd"), guestCount = Model.GuestCount })" class="btn-view-deal">
+                                    See Availability <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <div class="mb-3 text-muted">
+                        <i class="fas fa-search fa-3x"></i>
+                    </div>
+                    <h3>No hotels found</h3>
+                    <p class="text-muted">We couldn't find any properties matching your search criteria.</p>
+                    <a href="/" class="btn btn-primary mt-3">Search Again</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

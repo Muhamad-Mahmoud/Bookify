@@ -2,12 +2,14 @@ using Bookify.BL.Interfaces;
 using Bookify.Models;
 using Bookify.Models.ViewModels;
 using Bookify.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Bookify.PL.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Admin_Role)]
     public class CityController : Controller
     {
         private readonly ICityService _cityService;
@@ -46,7 +48,7 @@ namespace Bookify.PL.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(City city)
+        public async Task<IActionResult> Add(CityVM viewModel, IFormFile? ImageFile)
         {
             if (!ModelState.IsValid)
             {
@@ -56,24 +58,42 @@ namespace Bookify.PL.Areas.Admin.Controllers
                     Value = c.Id.ToString(),
                     Text = c.CountryName
                 }).ToList();
-                ViewBag.Countries = countryList;
-                return View(city);
+                viewModel.Countries = countryList;
+                return View(viewModel);
             }
 
             try
             {
-                var isCityExist = await _cityService.GetCityAsync(u => u.Name == city.Name && u.CountryId == city.CountryId);
+                var isCityExist = await _cityService.GetCityAsync(u => u.Name == viewModel.City.Name && u.CountryId == viewModel.City.CountryId);
                 if (isCityExist == null)
                 {
-                    await _cityService.AddCityAsync(city);
-                    TempData["success"] = "City added successfully.";
-                    return RedirectToAction(nameof(Index));
+                    var result = await _cityService.AddCityAsync(viewModel.City);
+                    if (result)
+                    {
+                        // Upload image if provided
+                        if (ImageFile != null && ImageFile.Length > 0)
+                        {
+                            var imagePath = await _cityService.UploadCityImage(ImageFile, viewModel.City.Id);
+                            if (!string.IsNullOrEmpty(imagePath))
+                            {
+                                viewModel.City.Image = imagePath;
+                                await _cityService.UpdateCityAsync(viewModel.City);
+                            }
+                        }
+                        
+                        TempData["success"] = "City added successfully.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    TempData["error"] = "Failed to add city.";
                 }
-                TempData["Fail"] = "City Already Exist";
+                else
+                {
+                    TempData["error"] = "City Already Exist";
+                }
             }
             catch
             {
-                TempData["Fail"] = "City Already Exist";
+                TempData["error"] = "Failed to add city.";
             }
 
             var countriesList = await _countryService.GetAllCountriesAsync();
@@ -82,9 +102,9 @@ namespace Bookify.PL.Areas.Admin.Controllers
                 Value = c.Id.ToString(),
                 Text = c.CountryName
             }).ToList();
-            ViewBag.Countries = countryListRetry;
+            viewModel.Countries = countryListRetry;
 
-            return View(city);
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -114,7 +134,7 @@ namespace Bookify.PL.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CityVM vm)
+        public async Task<IActionResult> Edit(int id, CityVM vm, IFormFile? ImageFile)
         {
             if (id != vm.City?.Id)
             {
@@ -134,6 +154,17 @@ namespace Bookify.PL.Areas.Admin.Controllers
 
             if (vm.City != null)
             {
+                // Upload new image if provided
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    // Pass the old image path to delete it
+                    var imagePath = await _cityService.UploadCityImage(ImageFile, vm.City.Id, vm.City.Image);
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        vm.City.Image = imagePath;
+                    }
+                }
+                
                 var result = await _cityService.UpdateCityAsync(vm.City);
                 if (result)
                 {

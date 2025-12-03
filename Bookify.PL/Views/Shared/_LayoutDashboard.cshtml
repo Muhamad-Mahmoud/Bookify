@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Bookify Admin</title>
+    <meta name="description" content="Bookify Admin Dashboard">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/public.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-hotel"></i>
+                <span>Bookify</span>
+            </div>
+
+            <!-- Hotels & Rooms -->
+            <div class="sidebar-menu-section">
+                <div class="sidebar-menu-title">Hotels & Rooms</div>
+                <div class="sidebar-menu">
+                    <a href="@Url.Action("Index", "Hotel", new { area = "Admin" })">
+                        <i class="fas fa-hotel"></i> Hotels
+                    </a>
+                    <a href="@Url.Action("Index", "Room", new { area = "Admin" })">
+                        <i class="fas fa-door-open"></i> Rooms
+                    </a>
+                    <a href="@Url.Action("Index", "RoomType", new { area = "Admin" })">
+                        <i class="fas fa-th"></i> Room Types
+                    </a>
+                </div>
+            </div>
+
+            <!-- Reservations & Payments -->
+            <div class="sidebar-menu-section">
+                <div class="sidebar-menu-title">Reservations</div>
+                <div class="sidebar-menu">
+                    <a href="@Url.Action("Index", "Reservation", new { area = "Admin" })">
+                        <i class="fas fa-calendar-check"></i> Reservations
+                    </a>
+                    <a href="@Url.Action("Index", "Invoice", new { area = "Admin" })">
+                        <i class="fas fa-receipt"></i> Invoices
+                    </a>
+                    <a href="@Url.Action("Index", "Payment", new { area = "Admin" })">
+                        <i class="fas fa-credit-card"></i> Payments
+                    </a>
+                </div>
+            </div>
+
+            <!-- Location -->
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="sidebar-menu-section">
+                    <div class="sidebar-menu-title">Location</div>
+                <div class="sidebar-menu">
+                    <a href="@Url.Action("Index", "Country", new { area = "Admin" })">
+                        <i class="fas fa-globe"></i> Countries
+                    </a>
+                    <a href="@Url.Action("Index", "City", new { area = "Admin" })">
+                        <i class="fas fa-map-marker-alt"></i> Cities
+                    </a>
+                </div>
+            </div>
+            }
+        </aside>
+
+        <!-- Main Content -->
+        <div class="dashboard-main">
+            <!-- Top Navigation -->
+            <nav class="dashboard-navbar">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="navbar-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="navbar-title">@ViewData["Title"]</div>
+                </div>
+                <div class="navbar-user">
+                    <partial name="_LoginPartial"></partial>
+                </div>
+            </nav>
+
+            <!-- Page Content -->
+            <main class="dashboard-content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js" defer></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+
+            if (toggle) {
+                toggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+            }
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                }
+            });
+        });
+    </script>
+    <partial name="_Notification" />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

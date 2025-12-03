@@ -43,6 +43,15 @@ namespace Bookify.Models
 
         [Required(ErrorMessage = "Status is required")]
         public InvoiceStatus Status { get; set; }
+
+        public int HotelId { get; set; }
+        [ForeignKey(nameof(HotelId))]
+        [ValidateNever]
+        public Hotel Hotel { get; set; }
+
+        [Display(Name = "Payment Intent ID")]
+        public string? PaymentIntentId { get; set; }
+
     }
 
     public enum InvoiceStatus

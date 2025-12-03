@@ -1,0 +1,87 @@
+@model List<RoomType>
+
+<link rel="stylesheet" href="~/css/admin-tables.css" />
+
+<div class="dashboard-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-th-large"></i> Room Types Management
+        </h1>
+        <a asp-controller="RoomType" asp-action="Add" class="add-hotel-btn">
+            <i class="fas fa-plus-circle"></i> Add New Room Type
+        </a>
+    </div>
+
+    <!-- Room Types Table -->
+    <div class="hotels-table-container">
+        @if (Model.Any())
+        {
+            <table class="table hotels-table">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 80px;">ID</th>
+                        <th>Room Type Name</th>
+                        <th>Size (m²)</th>
+                        <th>Max Guests</th>
+                        <th>Bed Type</th>
+                        <th>Base Price</th>
+                        <th class="text-center" style="width: 200px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <span class="hotel-id-badge">@item.Id</span>
+                            </td>
+                            <td>
+                                <span class="hotel-name">@item.Name</span>
+                            </td>
+                            <td>
+                                <span class="hotel-city">@item.Size</span>
+                            </td>
+                            <td>
+                                <span class="hotel-city">@item.MaxGuests</span>
+                            </td>
+                            <td>
+                                <span class="hotel-city">@item.BedType</span>
+                            </td>
+                            <td>
+                                <span class="hotel-city">@item.BasePrice.ToString("C")</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="action-buttons">
+                                    <a asp-controller="RoomType"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn-sm-custom btn-edit"
+                                       title="Edit Room Type">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+
+                                    <a asp-controller="RoomType"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn-sm-custom btn-delete"
+                                       title="Delete Room Type">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-hotels-message">
+                <i class="fas fa-inbox"></i>
+                <p>No room types found. <a asp-controller="RoomType" asp-action="Add">Create your first room type</a></p>
+            </div>
+        }
+    </div>
+</div>
+

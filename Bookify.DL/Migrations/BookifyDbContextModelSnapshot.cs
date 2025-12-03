@@ -33,6 +33,10 @@ namespace Bookify.DL.Migrations
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Image")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -48,42 +52,6 @@ namespace Bookify.DL.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("Bookify.Models.Company", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CompanyAddress")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("Bookify.Models.Country", b =>
@@ -152,8 +120,7 @@ namespace Bookify.DL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PersonalImgUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -192,10 +159,14 @@ namespace Bookify.DL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CityId")
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("BookingCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("CompanyId")
+                    b.Property<int>("CityId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -203,21 +174,66 @@ namespace Bookify.DL.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsFeatured")
                         .HasColumnType("bit");
+
+                    b.Property<string>("MainImage")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ReviewCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StarRating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<double>("UserRating")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Hotels");
+                });
+
+            modelBuilder.Entity("Bookify.Models.HotelImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("HotelImages");
                 });
 
             modelBuilder.Entity("Bookify.Models.Invoice", b =>
@@ -235,6 +251,9 @@ namespace Bookify.DL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("InvoiceAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -243,6 +262,9 @@ namespace Bookify.DL.Migrations
 
                     b.Property<DateTime?>("PaidAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
@@ -253,6 +275,8 @@ namespace Bookify.DL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("HotelId");
 
                     b.HasIndex("ReservationId")
                         .IsUnique();
@@ -278,15 +302,16 @@ namespace Bookify.DL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -294,6 +319,8 @@ namespace Bookify.DL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("HotelId");
 
                     b.ToTable("Reservations");
                 });
@@ -332,46 +359,55 @@ namespace Bookify.DL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Capacity")
+                    b.Property<int?>("Floor")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
+                    b.Property<string>("Notes")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("HotelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageURL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("RoomName")
+                    b.Property<string>("RoomNumber")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("RoomTypeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Services")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Size")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HotelId");
-
                     b.HasIndex("RoomTypeId");
 
                     b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("Bookify.Models.RoomImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("RoomTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomTypeId");
+
+                    b.ToTable("RoomImages");
                 });
 
             modelBuilder.Entity("Bookify.Models.RoomType", b =>
@@ -382,12 +418,47 @@ namespace Bookify.DL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("TypeName")
+                    b.Property<string>("Amenities")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<decimal>("BasePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("BedType")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MainImage")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("MaxGuests")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
 
                     b.ToTable("RoomTypes");
                 });
@@ -536,17 +607,6 @@ namespace Bookify.DL.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("Bookify.Models.Company", b =>
-                {
-                    b.HasOne("Bookify.Models.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("City");
-                });
-
             modelBuilder.Entity("Bookify.Models.Hotel", b =>
                 {
                     b.HasOne("Bookify.Models.City", "City")
@@ -555,15 +615,24 @@ namespace Bookify.DL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Bookify.Models.Company", "Company")
+                    b.HasOne("Bookify.Models.Customer", "Owner")
                         .WithMany("Hotels")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("OwnerId");
 
                     b.Navigation("City");
 
-                    b.Navigation("Company");
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Bookify.Models.HotelImage", b =>
+                {
+                    b.HasOne("Bookify.Models.Hotel", "Hotel")
+                        .WithMany("GalleryImages")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hotel");
                 });
 
             modelBuilder.Entity("Bookify.Models.Invoice", b =>
@@ -574,6 +643,12 @@ namespace Bookify.DL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Bookify.Models.Hotel", "Hotel")
+                        .WithMany("Invoices")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Bookify.Models.Reservation", "Reservation")
                         .WithOne("Invoice")
                         .HasForeignKey("Bookify.Models.Invoice", "ReservationId")
@@ -581,6 +656,8 @@ namespace Bookify.DL.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
+
+                    b.Navigation("Hotel");
 
                     b.Navigation("Reservation");
                 });
@@ -593,7 +670,15 @@ namespace Bookify.DL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Bookify.Models.Hotel", "Hotel")
+                        .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Hotel");
                 });
 
             modelBuilder.Entity("Bookify.Models.ReservedRoom", b =>
@@ -605,7 +690,7 @@ namespace Bookify.DL.Migrations
                         .IsRequired();
 
                     b.HasOne("Bookify.Models.Room", "Room")
-                        .WithMany("RoomReserved")
+                        .WithMany("Reservations")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -617,17 +702,35 @@ namespace Bookify.DL.Migrations
 
             modelBuilder.Entity("Bookify.Models.Room", b =>
                 {
-                    b.HasOne("Bookify.Models.Hotel", null)
-                        .WithMany("Rooms")
-                        .HasForeignKey("HotelId");
-
                     b.HasOne("Bookify.Models.RoomType", "RoomType")
-                        .WithMany()
+                        .WithMany("Rooms")
+                        .HasForeignKey("RoomTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RoomType");
+                });
+
+            modelBuilder.Entity("Bookify.Models.RoomImage", b =>
+                {
+                    b.HasOne("Bookify.Models.RoomType", "RoomType")
+                        .WithMany("GalleryImages")
                         .HasForeignKey("RoomTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("RoomType");
+                });
+
+            modelBuilder.Entity("Bookify.Models.RoomType", b =>
+                {
+                    b.HasOne("Bookify.Models.Hotel", "Hotel")
+                        .WithMany("RoomTypes")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hotel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -681,19 +784,20 @@ namespace Bookify.DL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Bookify.Models.Company", b =>
-                {
-                    b.Navigation("Hotels");
-                });
-
             modelBuilder.Entity("Bookify.Models.Customer", b =>
                 {
+                    b.Navigation("Hotels");
+
                     b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("Bookify.Models.Hotel", b =>
                 {
-                    b.Navigation("Rooms");
+                    b.Navigation("GalleryImages");
+
+                    b.Navigation("Invoices");
+
+                    b.Navigation("RoomTypes");
                 });
 
             modelBuilder.Entity("Bookify.Models.Reservation", b =>
@@ -705,7 +809,14 @@ namespace Bookify.DL.Migrations
 
             modelBuilder.Entity("Bookify.Models.Room", b =>
                 {
-                    b.Navigation("RoomReserved");
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("Bookify.Models.RoomType", b =>
+                {
+                    b.Navigation("GalleryImages");
+
+                    b.Navigation("Rooms");
                 });
 #pragma warning restore 612, 618
         }
