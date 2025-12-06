@@ -44,13 +44,6 @@ The project follows a clean **N-Tier Architecture** to ensure scalability and ma
 *   SQL Server
 *   Visual Studio 2022 or VS Code
 
-### Installation
-
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/yourusername/Bookify.git
-    cd Bookify
-    ```
 
 2.  **Configure Database**
     Update the connection string in `appsettings.json`:
@@ -79,3 +72,11 @@ The project follows a clean **N-Tier Architecture** to ensure scalability and ma
     ```bash
     dotnet run --project Bookify.PL
     ```
+<<<<<<< HEAD
+=======
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+>>>>>>> e28f71b477d574e3c4d12f488254a7ffa0e6b203
