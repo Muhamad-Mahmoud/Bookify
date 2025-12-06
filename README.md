@@ -72,10 +72,6 @@ The project follows a clean **N-Tier Architecture** to ensure scalability and ma
     ```bash
     dotnet run --project Bookify.PL
     ```
-<<<<<<< HEAD
-=======
-
-## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
