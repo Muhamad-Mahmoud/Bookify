@@ -1,0 +1,117 @@
+@model IEnumerable<Reservation>
+
+@{
+    ViewData["Title"] = "My Reservations";
+}
+
+<div class="container" style="padding-top: var(--spacing-2xl); padding-bottom: var(--spacing-3xl);">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 style="font-size: var(--font-size-4xl); font-weight: 800; color: var(--color-black); margin-bottom: var(--spacing-xs);">My Reservations</h1>
+            <p style="color: var(--color-gray-500);">Manage your upcoming and past stays.</p>
+        </div>
+        <a asp-controller="Home" asp-action="Index" class="btn-primary-custom">
+            <i class="fas fa-plus"></i>
+            <span>New Booking</span>
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="icon-circle">
+                <i class="fas fa-suitcase-rolling"></i>
+            </div>
+            <h3>No reservations yet</h3>
+            <p>It seems you haven't booked any trips yet. Start exploring now!</p>
+            <a asp-controller="Home" asp-action="Index" class="btn-primary-custom mt-3">Start Exploring</a>
+        </div>
+    }
+    else
+    {
+        <div class="reservations-grid">
+            @foreach (var item in Model.OrderByDescending(r => r.Id))
+            {
+                <div class="reservation-card">
+                    <div class="card-status-strip @GetStatusClass(item.Status)"></div>
+                    <div class="card-content">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="hotel-name">
+                                    @(item.Hotel != null ? item.Hotel.Name : "Hotel Name Unavailable")
+                                </h5>
+                                @if(item.RoomReserved != null && item.RoomReserved.Any())
+                                {
+                                    var room = item.RoomReserved.FirstOrDefault()?.Room;
+                                    if(room != null && room.RoomType != null)
+                                    {
+                                         <div class="room-type">@room.RoomType.Name</div>
+                                    }
+                                }
+                            </div>
+                            <span class="status-badge @GetStatusClass(item.Status)">
+                                @item.Status
+                            </span>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-item">
+                                <i class="far fa-calendar-alt"></i>
+                                <div>
+                                    <span class="label">Check-in</span>
+                                    <span class="value">@item.CheckInDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="far fa-calendar-check"></i>
+                                <div>
+                                    <span class="label">Check-out</span>
+                                    <span class="value">@item.CheckOutDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="total-price">
+                                <span class="label">Total</span>
+                                <span class="amount">@item.TotalPrice.ToString("C")</span>
+                            </div>
+                            
+                            @if(item.Status == ReservationStatus.Pending)
+                            {
+                                <button class="btn-text text-warning">Processing...</button>
+                            }
+                            else if (item.Status == ReservationStatus.Confirmed)
+                            {
+                                <div class="text-success small fw-bold"><i class="fas fa-check-circle me-1"></i> Paid</div>
+                            }
+                            else if (item.Status == ReservationStatus.Cancelled)
+                            {
+                                <div class="text-muted small"><i class="fas fa-times-circle me-1"></i> Cancelled</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@functions {
+    public string GetStatusClass(ReservationStatus status) {
+        return status switch {
+            ReservationStatus.Confirmed => "status-confirmed",
+            ReservationStatus.Pending => "status-pending",
+            ReservationStatus.Cancelled => "status-cancelled",
+            ReservationStatus.Completed => "status-completed",
+            _ => "status-default"
+        };
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/booking-history.css" asp-append-version="true" />
+}

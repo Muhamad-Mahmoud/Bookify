@@ -21,8 +21,7 @@ namespace Bookify.PL.Areas.Customer.Controllers
             _reservationService = reservationService;
         }
 
-        public async Task<IActionResult> GetHotel(
-    int id, DateTime? checkInDate, DateTime? checkOutDate, int guestCount)
+        public async Task<IActionResult> GetHotel( int id, DateTime? checkInDate, DateTime? checkOutDate, int guestCount)
         {
             var hotel = await _hotelService.GetHotelByIdAsync(id, includeProperties: "GalleryImages,City");
 
@@ -52,9 +51,7 @@ namespace Bookify.PL.Areas.Customer.Controllers
             return View(model);
         }
 
-
-
-        public async Task<IActionResult> Search(string location, DateTime? checkInDate, DateTime? checkOutDate, int guestCount = 2)
+        public async Task<IActionResult> Search(string location, DateTime? checkInDate, DateTime? checkOutDate, int guestCount = 1)
         {
             var checkIn = checkInDate ?? DateTime.Now;
             var checkOut = checkOutDate ?? DateTime.Now.AddDays(1);

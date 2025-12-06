@@ -43,28 +43,47 @@
 
                 <!-- Center Navigation Links -->
                 <ul class="nav-links">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li>
-                        <a href="#Featured">Featured Hotels   </a>
-                    </li>
-                    <li>
-                        <a href="#Rated">Top Rated Hotels   </a>
-                    </li>
-                    <li>
-                        <a href="#destinations">Destinations </a>
-                    </li>
+                    @{
+                        var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+                        var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+                        var isHomeIndex = string.Equals(currentController, "Home", StringComparison.OrdinalIgnoreCase) &&
+                                          string.Equals(currentAction, "Index", StringComparison.OrdinalIgnoreCase);
+                    }
+                    @if (isHomeIndex && !(User.IsInRole("Owner") || User.IsInRole("Admin")))
+                    {
+                                             <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                       
+                        <li>
+                            <a href="#Featured">Featured Hotels   </a>
+                        </li>
+                        <li>
+                            <a href="#Rated">Top Rated Hotels   </a>
+                        </li>
+                        <li>
+                            <a href="#destinations">Destinations </a>
+                        </li>
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>
+                            <a asp-area="Customer" asp-controller="Booking" asp-action="History">My Reservations</a>
+                        </li>
+                    }
                 </ul>
 
-                <!-- User Actions -->
-                <partial name="_LoginPartial"></partial>
+                
+                
                 @if (User.IsInRole("Admin") || User.IsInRole("Owner"))
                 {
                     <div class="ms-2">
                         <a asp-controller="Dashboard" asp-action="index" asp-area="Admin" class="btn-dashboard">
-                            <i class="fas fa-tachometer-alt"></i>
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </div>
                 }
+                <!-- User Actions -->
+                <partial name="_LoginPartial"></partial>
+
                 <!-- Mobile Menu Toggle -->
                 <button class="mobile-toggle" type="button" id="mobileMenuToggle">
                     <i class="fas fa-bars"></i>

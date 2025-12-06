@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Bookify.DL.DbInitializer
 {
-    public class DbInitializer : IDbInitializer
+    public class DbInitializer : IDbInitializer  // Server Ready
     {
         private readonly UserManager<Customer> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -27,8 +27,6 @@ namespace Bookify.DL.DbInitializer
         }
         public void Initialize()
         {
-
-
             //migrations if they are not applied
             try
             {

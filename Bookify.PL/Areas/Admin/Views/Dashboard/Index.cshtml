@@ -23,19 +23,7 @@
                     <span class="stat-label">Total Hotels</span>
                 </div>
                 <div class="stat-value">@Model.TotalHotels</div>
-                @if (Model.HotelsChange != 0)
-                {
-                    <div class="stat-change @(Model.HotelsChange > 0 ? "positive" : "negative")">
-                        <i class="fas fa-arrow-@(Model.HotelsChange > 0 ? "up" : "down")"></i> 
-                        @Math.Abs(Model.HotelsChange).ToString("0.#")% from last month
-                    </div>
-                }
-                else
-                {
-                    <div class="stat-change">
-                        <i class="fas fa-minus"></i> No change
-                    </div>
-                }
+
             </div>
         </div>
 
@@ -47,17 +35,7 @@
                     <span class="stat-label">Active Reservations</span>
                 </div>
                 <div class="stat-value">@Model.ActiveReservations</div>
-                <div class="stat-change @(Model.ReservationsChange > 0 ? "positive" : Model.ReservationsChange < 0 ? "negative" : "")">
-                    @if (Model.ReservationsChange != 0)
-                    {
-                        <i class="fas fa-arrow-@(Model.ReservationsChange > 0 ? "up" : "down")"></i>
-                        @Math.Abs(Model.ReservationsChange).ToString("0.#") 
-                    }
-                    else
-                    {
-                        <i class="fas fa-minus"></i> <span>No change</span>
-                    }
-                </div>
+
             </div>
         </div>
 
@@ -69,19 +47,7 @@
                     <span class="stat-label">Available Rooms</span>
                 </div>
                 <div class="stat-value">@Model.AvailableRooms</div>
-                @if (Model.RoomsChange != 0)
-                {
-                    <div class="stat-change @(Model.RoomsChange > 0 ? "positive" : "negative")">
-                        <i class="fas fa-arrow-@(Model.RoomsChange > 0 ? "up" : "down")"></i>
-                        @Math.Abs(Model.RoomsChange).ToString("0.#")% from last month
-                    </div>
-                }
-                else
-                {
-                    <div class="stat-change">
-                        <i class="fas fa-check-circle"></i> Available now
-                    </div>
-                }
+
             </div>
         </div>
 
@@ -93,24 +59,14 @@
                     <span class="stat-label">Total Revenue</span>
                 </div>
                 <div class="stat-value">EGP @Model.TotalRevenue.ToString("N0")</div>
-                <div class="stat-change @(Model.RevenueChange > 0 ? "positive" : Model.RevenueChange < 0 ? "negative" : "")">
-                    @if (Model.RevenueChange != 0)
-                    {
-                        <i class="fas fa-arrow-@(Model.RevenueChange > 0 ? "up" : "down")"></i>
-                        @Math.Abs(Model.RevenueChange).ToString("0.#")
-                    }
-                    else
-                    {
-                        <i class="fas fa-minus"></i> <span>No change</span>
-                    }
-                </div>
+
             </div>
         </div>
     </div>
 
     <div class="row mt-4">
         <!-- Quick Actions -->
-        <div class="col-lg-8">
+        <div class="col-12">
             <div class="card dashboard-card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
@@ -119,62 +75,31 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-3 mb-3">
                             <a href="@Url.Action("Create", "Hotel", new { area = "Admin" })" class="quick-action-btn">
                                 <i class="fas fa-plus-circle"></i>
                                 <span>Add New Hotel</span>
                             </a>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-3 mb-3">
                             <a href="@Url.Action("Create", "Room", new { area = "Admin" })" class="quick-action-btn">
                                 <i class="fas fa-plus-circle"></i>
                                 <span>Add New Room</span>
                             </a>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-3 mb-3">
                             <a href="@Url.Action("Index", "Reservation", new { area = "Admin" })" class="quick-action-btn">
                                 <i class="fas fa-eye"></i>
                                 <span>View Reservations</span>
                             </a>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-3 mb-3">
                             <a href="@Url.Action("Index", "Invoice", new { area = "Admin" })" class="quick-action-btn">
                                 <i class="fas fa-file-invoice"></i>
                                 <span>View Invoices</span>
                             </a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Activities -->
-        <div class="col-lg-4">
-            <div class="card dashboard-card">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-history"></i> Recent Activities
-                    </h5>
-                </div>
-                <div class="card-body p-0">
-                    <ul class="activity-list">
-                        <li>
-                            <span class="activity-badge">New</span>
-                            Hotel "Grand Palace" added
-                        </li>
-                        <li>
-                            <span class="activity-badge">Reservation</span>
-                            10 new bookings today
-                        </li>
-                        <li>
-                            <span class="activity-badge">Payment</span>
-                            $5,200 received
-                        </li>
-                        <li>
-                            <span class="activity-badge">Update</span>
-                            Room inventory updated
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>

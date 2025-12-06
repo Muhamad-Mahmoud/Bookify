@@ -53,39 +53,20 @@ namespace Bookify.PL.Areas.Customer.Controllers
         public async Task<IActionResult> Create(int roomTypeId, DateTime checkInDate, DateTime checkOutDate)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null) return Challenge();
 
-            try
-            {
-                var reservationId = await _reservationService.CreateReservationAsync(userId, roomTypeId, checkInDate, checkOutDate);
-                var reservation = await _reservationService.GetReservationByIdAsync(reservationId);
-                var roomType = await _roomTypeService.GetRoomTypeByIdAsync(roomTypeId);
+            var reservationId = await _reservationService.CreateReservationAsync(userId, roomTypeId, checkInDate, checkOutDate);
+            var reservation = await _reservationService.GetReservationByIdAsync(reservationId);
+            var roomType = await _roomTypeService.GetRoomTypeByIdAsync(roomTypeId);
 
-                if (reservation == null || roomType == null) return NotFound();
 
-                var domain = Request.Scheme + "://" + Request.Host.Value + "/";
-                var session = _paymentService.CreateCheckoutSession(reservation, roomType, domain);
 
-                if (string.IsNullOrEmpty(session.Url))
-                {
-                    TempData["error"] = "Failed to create payment session.";
-                    return RedirectToAction("Checkout", new { roomTypeId, checkInDate, checkOutDate });
-                }
+            var domain = Request.Scheme + "://" + Request.Host.Value + "/";
+            var session = _paymentService.CreateCheckoutSession(reservation, roomType, domain);
 
-                return Redirect(session.Url);
-            }
-            catch (Exception ex)
-            {
-                TempData["error"] = ex.Message;
-                // Redirect back to hotel page. We need hotelId.
-                // Since we might not have it easily if roomType fetch failed, we try to fetch it again or just redirect to home.
-                var roomType = await _roomTypeService.GetRoomTypeByIdAsync(roomTypeId);
-                if (roomType != null)
-                {
-                    return RedirectToAction("GetHotel", "Hotel", new { id = roomType.HotelId });
-                }
-                return RedirectToAction("Index", "Home");
-            }
+
+
+            return Redirect(session.Url);
+
         }
 
         public async Task<IActionResult> Confirmation(int reservationId)
@@ -98,6 +79,15 @@ namespace Bookify.PL.Areas.Customer.Controllers
         {
             await _reservationService.CancelReservationAsync(reservationId);
             return View(reservationId);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> History()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var reservations = await _reservationService.GetReservationsForUserAsync(userId);
+            return View(reservations);
         }
     }
 }

@@ -20,7 +20,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 40px;
+    gap: 15px;
     width: 100%;
 }
 
@@ -55,7 +55,8 @@
     margin: 0;
     padding: 0;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-start;
+    /* Align links to the left */
 }
 
 .nav-links li {
@@ -504,19 +505,27 @@ body.dark-mode .nav-icon-btn {
 body.dark-mode .nav-select {
     color: var(--color-white);
 }
+
 /* Dashboard Button */
 .btn-dashboard {
-    width: 40px;
     height: 40px;
+    padding: 0 20px;
     border-radius: 8px;
+    /* Consistent with other nav buttons */
     background: var(--color-primary);
     color: var(--color-black);
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    /* Space between icon and text */
     text-decoration: none;
     transition: all 0.3s ease;
     border: none;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .btn-dashboard:hover {
@@ -527,5 +536,6 @@ body.dark-mode .nav-select {
 }
 
 .btn-dashboard i {
-    font-size: 18px;
+    font-size: 16px;
+    /* Slightly smaller to balance with text */
 }

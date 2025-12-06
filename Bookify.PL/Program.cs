@@ -16,7 +16,7 @@ builder.Services.AddDbContext<BookifyDbContext>(options => options.UseSqlServer(
 // Add Identity services
 builder.Services.AddIdentity<Customer, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true;
+    options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
@@ -97,7 +97,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{Area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
-
 app.Run();
 
 void SeedDatabase()
@@ -108,4 +107,5 @@ void SeedDatabase()
         dbInitializer.Initialize();
     }
 }
+
 

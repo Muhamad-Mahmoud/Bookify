@@ -26,7 +26,7 @@ namespace Bookify.PL.Areas.Admin.Controllers
         private string GetUserId()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
-            return claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
         public async Task<IActionResult> Index()

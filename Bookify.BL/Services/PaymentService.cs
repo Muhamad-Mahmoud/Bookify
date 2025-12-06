@@ -27,7 +27,7 @@ namespace Bookify.BL.Services
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
                                 Name = $"Room Type: {roomType.Name} ({reservation.CheckInDate:MMM dd} - {reservation.CheckOutDate:MMM dd})",
-                                
+
                             }
                         },
                         Quantity = 1

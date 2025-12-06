@@ -39,7 +39,6 @@ namespace Bookify.DL.Data
                 .HasForeignKey(i => i.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configure RoomType.BasePrice as decimal(18,2)
             modelBuilder.Entity<RoomType>()
                 .Property(rt => rt.BasePrice)
                 .HasColumnType("decimal(18,2)");
