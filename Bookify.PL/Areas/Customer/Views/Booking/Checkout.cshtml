@@ -3,167 +3,50 @@
     ViewData["Title"] = "Checkout";
 }
 
-<style>
-    .checkout-container {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 0 20px;
-    }
-    .checkout-grid {
-        display: grid;
-        grid-template-columns: 1fr 380px;
-        gap: 30px;
-    }
-    .checkout-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border: 1px solid #e7e7e7;
-        overflow: hidden;
-    }
-    .card-header {
-        padding: 20px 24px;
-        border-bottom: 1px solid #e7e7e7;
-        background: #f8f9fa;
-    }
-    .card-header h2 {
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #1a1a1a;
-    }
-    .card-body {
-        padding: 24px;
-    }
-    
-    /* Hotel Info */
-    .hotel-summary {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 24px;
-    }
-    .hotel-thumb {
-        width: 100px;
-        height: 100px;
-        border-radius: 8px;
-        object-fit: cover;
-    }
-    .hotel-details h3 {
-        margin: 0 0 4px 0;
-        font-size: 1.1rem;
-        font-weight: 700;
-    }
-    .hotel-address {
-        font-size: 0.9rem;
-        color: #595959;
-        margin-bottom: 8px;
-    }
-    .room-name {
-        font-weight: 600;
-        color: #006ce4;
-    }
-
-    /* Trip Details */
-    .trip-dates {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        margin-bottom: 24px;
-        padding: 16px;
-        background: #f0f5ff;
-        border-radius: 8px;
-    }
-    .date-box label {
-        display: block;
-        font-size: 0.85rem;
-        color: #595959;
-        margin-bottom: 4px;
-    }
-    .date-box div {
-        font-weight: 600;
-        font-size: 1rem;
-    }
-
-    /* Price Breakdown */
-    .price-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 12px;
-        font-size: 0.95rem;
-    }
-    .price-row.total {
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 1px solid #e7e7e7;
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: #003b95;
-    }
-    
-    .btn-pay {
-        width: 100%;
-        background: linear-gradient(135deg, #006ce4 0%, #003b95 100%);
-        color: white;
-        border: none;
-        padding: 16px;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    .btn-pay:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0, 59, 149, 0.3);
-    }
-
-
-</style>
+@section Styles {
+    <link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true" />
+}
 
 <div class="checkout-container">
-    <h1 style="margin-bottom: 24px; font-size: 2rem;">Secure Checkout</h1>
+    <h1 class="checkout-title">Secure Checkout</h1>
     
     <div class="checkout-grid">
-        <!-- Left Column: Guest Details (Placeholder for now) -->
+        <!-- Left Column: Guest Details -->
         <div class="checkout-left">
             <div class="checkout-card">
                 <div class="card-header">
                     <h2>Guest Information</h2>
                 </div>
                 <div class="card-body">
-                    <p style="color: #595959; margin-bottom: 20px;">
+                    <p style="color: var(--text-muted); margin-bottom: 24px;">
                         You are logged in. We'll use your account details for this booking.
                     </p>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div>
-                            <label style="display:block; margin-bottom:6px; font-weight:600;">First Name</label>
-                            <input type="text" value="@User.Identity.Name" disabled style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9;" />
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" value="@User.Identity.Name" disabled class="form-control" />
                         </div>
-                        <div>
-                            <label style="display:block; margin-bottom:6px; font-weight:600;">Email</label>
-                            <input type="text" value="user@example.com" disabled style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9;" />
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" value="user@example.com" disabled class="form-control" />
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="checkout-card" style="margin-top: 24px;">
+            <div class="checkout-card">
                 <div class="card-header">
                     <h2>Payment Method</h2>
                 </div>
                 <div class="card-body">
-                    <div style="display: flex; align-items: center; gap: 12px; padding: 16px; border: 1px solid #006ce4; background: #f0f5ff; border-radius: 8px;">
-                        <i class="fas fa-credit-card" style="font-size: 1.5rem; color: #006ce4;"></i>
+                    <div class="payment-method-box">
+                        <i class="fas fa-credit-card payment-icon"></i>
                         <div>
-                            <div style="font-weight: 600;">Credit / Debit Card</div>
-                            <div style="font-size: 0.85rem; color: #595959;">Secure payment via Stripe</div>
+                            <div style="font-weight: 700; color: var(--text-main);">Credit / Debit Card</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Secure payment via Stripe</div>
                         </div>
-                        <i class="fas fa-check-circle" style="margin-left: auto; color: #006ce4;"></i>
+                        <i class="fas fa-check-circle payment-check"></i>
                     </div>
                 </div>
             </div>
@@ -199,26 +82,26 @@
                         </div>
                     </div>
                     
-                    <div style="margin-bottom: 20px; font-size: 0.9rem; color: #595959;">
-                        <i class="fas fa-moon"></i> @Model.TotalNights nights
+                    <div style="margin-bottom: 24px; font-size: 0.95rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-moon"></i> @Model.TotalNights nights stay
                     </div>
 
                     <div class="price-breakdown">
                         <div class="price-row">
                             <span>Original Price (@Model.TotalNights nights)</span>
-                            <span>EGP @Model.BasePrice.ToString("N2")</span>
+                            <span>EGP @Model.BasePrice.ToString("N0")</span>
                         </div>
                         <div class="price-row">
                             <span>Taxes & Fees (14%)</span>
-                            <span>EGP @Model.Tax.ToString("N2")</span>
+                            <span>EGP @Model.Tax.ToString("N0")</span>
                         </div>
                         <div class="price-row total">
                             <span>Total</span>
-                            <span>EGP @Model.TotalPrice.ToString("N2")</span>
+                            <span>EGP @Model.TotalPrice.ToString("N0")</span>
                         </div>
                     </div>
 
-                    <form asp-action="Create" method="post" style="margin-top: 24px;">
+                    <form asp-action="Create" method="post">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="roomTypeId" value="@Model.RoomType.Id" />
                         <input type="hidden" name="checkInDate" value="@Model.CheckInDate.ToString("yyyy-MM-dd")" />
@@ -230,7 +113,7 @@
                         </button>
                     </form>
                     
-                    <div style="text-align: center; margin-top: 12px; font-size: 0.8rem; color: #777;">
+                    <div class="secure-badge">
                         <i class="fas fa-shield-alt"></i> Secure SSL Encrypted Transaction
                     </div>
                 </div>

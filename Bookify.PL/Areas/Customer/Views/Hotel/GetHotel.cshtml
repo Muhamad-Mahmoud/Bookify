@@ -2,144 +2,29 @@
 @model Bookify.Models.ViewModels.HotelDetailsVM
 @{
     ViewData["Title"] = Model.Hotel.Name;
+    ViewData["Location"] = Model.Hotel.Name; // Show hotel name in location field
+    ViewData["LocationReadOnly"] = true;
+    ViewData["CheckInDate"] = Model.CheckInDate;
+    ViewData["CheckOutDate"] = Model.CheckOutDate;
+    ViewData["GuestCount"] = Model.GuestCount;
+    ViewData["FormAction"] = Url.Action("GetHotel", "Hotel", new { area = "Customer" });
+    ViewData["ExtraHiddenFields"] = new Dictionary<string, string> { { "id", Model.Hotel.Id.ToString() } };
+
     var hasRooms = Model.RoomTypes?.Any() == true;
     var minPrice = hasRooms ? Model.RoomTypes!.Min(r => r.BasePrice) : 0M;
-    
-    // Construct image URL for main image with fallback
-    var mainImageSrc = !string.IsNullOrEmpty(Model.Hotel.MainImage) 
-        ? Model.Hotel.MainImage.Replace("\\", "/") 
-        : "/images/placeholder-hotel.jpg";
 
-    // Hardcoded reviews for display (would normally come from DB)
-    var reviews = new List<ReviewViewModel>
-    {
-        new ReviewViewModel { ReviewerName = "Mohammed Jamal", ReviewerInitials = "MJ", Country = "Egypt", Date = new DateTime(2024, 11, 15), Rating = 9.5, Text = "Excellent hotel with outstanding service! The room was spacious, clean, and beautifully decorated. The staff went above and beyond to make our stay comfortable. The breakfast buffet was incredible with a wide variety of options. Location is perfect, close to all major attractions." },
-        new ReviewViewModel { ReviewerName = "Sara Ahmed", ReviewerInitials = "SA", Country = "United Arab Emirates", Date = new DateTime(2024, 10, 28), Rating = 8.8, Text = "Great experience overall. The hotel is modern and well-maintained. Pool area was fantastic, and the gym had all the equipment we needed. Room service was prompt and the food quality was good. Would definitely stay here again!" },
-        new ReviewViewModel { ReviewerName = "John Davis", ReviewerInitials = "JD", Country = "United States", Date = new DateTime(2024, 9, 12), Rating = 9.7, Text = "One of the best hotels I've stayed at! Everything was perfect from check-in to check-out. The view from our room was breathtaking. Staff was extremely friendly and helpful. Highly recommend this property!" }
-    };
+    // Construct image URL for main image with fallback
+    var mainImageSrc = !string.IsNullOrEmpty(Model.Hotel.MainImage)
+        ? Model.Hotel.MainImage.Replace("\\", "/")
+        : "/images/placeholder-hotel.jpg";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/hotel-details.css" asp-append-version="true" />
-    <style>
-        /* Custom Search Box Styling for Hotel Details */
-        .hotel-search-box {
-            background: var(--accent); /* Brand Yellow */
-            padding: 2px;
-            border-radius: 8px;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 32px;
-            border: 3px solid var(--accent);
-            position: relative;
-            z-index: 20; /* Ensure calendar goes over other elements */
-        }
-
-        .hotel-search-form {
-            display: flex;
-            gap: 6px;
-            align-items: stretch;
-        }
-
-        .hotel-search-form .form-group {
-            margin-bottom: 0;
-            background: white;
-            border-radius: 6px;
-            position: relative;
-        }
-
-        .hotel-search-form .date-inputs-wrapper {
-            border: none;
-            height: 52px;
-            background: white;
-            box-shadow: none;
-            border-radius: 6px;
-            padding: 8px 16px;
-        }
-        
-        .hotel-search-form .date-inputs-wrapper:hover {
-            background: #fdfdfd;
-        }
-
-        .hotel-search-form .form-select {
-            border: none;
-            height: 52px;
-            box-shadow: none;
-            border-radius: 6px;
-            font-weight: 600;
-            color: var(--text-main);
-            padding-left: 16px;
-            cursor: pointer;
-        }
-
-        .hotel-search-form .btn-search {
-            background: var(--primary);
-            color: white;
-            font-weight: 700;
-            height: 52px;
-            border-radius: 6px;
-            padding: 0 32px;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-            border: 2px solid var(--primary);
-            font-size: 1rem;
-            white-space: nowrap;
-        }
-
-        .hotel-search-form .btn-search:hover {
-            background: var(--primary-hover);
-            border-color: var(--primary-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .hotel-search-form .date-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-            display: block;
-        }
-
-        .hotel-search-form .date-input {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-main);
-            padding: 0;
-            height: auto;
-        }
-        
-        .hotel-search-form .date-separator {
-            color: #ccc;
-            margin: 0 12px;
-            font-weight: 300;
-        }
-
-        /* Responsive adjustments */
-        @@media (max-width: 768px) {
-            .hotel-search-form {
-                flex-direction: column;
-            }
-            .hotel-search-form .btn-search {
-                width: 100%;
-            }
-        }
-    </style>
 }
 
 <div class="hotel-wrapper">
     <div class="hotel-container">
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb-nav" aria-label="Breadcrumb">
-            <a href="/">Home</a>
-            <span class="breadcrumb-separator" aria-hidden="true">/</span>
-            <a href="#">Egypt</a>
-            <span class="breadcrumb-separator" aria-hidden="true">/</span>
-            <a href="#">Cairo</a>
-            <span class="breadcrumb-separator" aria-hidden="true">/</span>
-            <span aria-current="page">@Model.Hotel.Name</span>
-        </nav>
-
         <!-- Header -->
         <header class="hotel-header-section">
             <div class="header-content">
@@ -181,20 +66,20 @@
                     <i class="fas fa-search-plus" aria-hidden="true"></i>
                 </div>
             </div>
-            
+
             <!-- Gallery Thumbnails -->
             @if (Model.Hotel.GalleryImages != null && Model.Hotel.GalleryImages.Count > 0)
             {
                 var galleryList = Model.Hotel.GalleryImages.ToList();
                 int totalImages = galleryList.Count + 1; // +1 for main image
-                
+
                 // Show up to 4 thumbnails (indices 1-4 in grid)
                 for (int i = 0; i < Math.Min(4, galleryList.Count); i++)
                 {
                     var img = galleryList[i];
                     var isLastVisible = (i == 3 && galleryList.Count > 4); // 4th thumbnail (5th image total)
                     var index = i + 1; // Lightbox index (0 is main image)
-                    
+
                     <div class="gallery-item js-lightbox-trigger" data-index="@index">
                         <img src="@img.ImageUrl.Replace("\\", "/")" alt="Hotel photo" loading="lazy" />
                         @if (isLastVisible)
@@ -215,28 +100,7 @@
                         }
                     </div>
                 }
-                
-                // Fill remaining slots if less than 4 thumbnails
-                for (int j = galleryList.Count; j < 4; j++)
-                {
-                    <div class="gallery-item" style="background:#f0f0f0; cursor: default;">
-                        <div style="height:100%; display:flex; align-items:center; justify-content:center; color:#ccc;">
-                            <i class="fas fa-image fa-2x" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <!-- Empty placeholders if no gallery images -->
-                @for (int j = 0; j < 4; j++)
-                {
-                    <div class="gallery-item" style="background:#f0f0f0; cursor: default;">
-                        <div style="height:100%; display:flex; align-items:center; justify-content:center; color:#ccc;">
-                            <i class="fas fa-image fa-2x" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                }
+
             }
         </div>
 
@@ -246,7 +110,7 @@
                 <div class="info-card">
                     <h2 class="section-title">About the property</h2>
                     <p class="description-text">@Html.Raw(Html.Encode(Model.Hotel.Description).Replace("\n", "<br />"))</p>
-                    
+
                     <h3 class="section-title" style="font-size: 1.1rem; margin-top: 32px;">Most popular facilities</h3>
                     <div class="facilities-list">
                         <div class="facility-tag"><i class="fas fa-wifi" aria-hidden="true"></i> Free WiFi</div>
@@ -260,17 +124,9 @@
                     </div>
                 </div>
 
-                <!-- Sticky Tabs -->
-                <div class="sticky-tabs-wrapper">
-                    <nav class="tabs-nav" role="tablist" aria-label="Hotel information tabs">
-                        <button class="tab-link active js-tab-link" data-tab="availability" role="tab" aria-selected="true" aria-controls="tab-availability">Availability</button>
-                        <button class="tab-link js-tab-link" data-tab="reviews" role="tab" aria-selected="false" aria-controls="tab-reviews">Guest Reviews</button>
-                        <button class="tab-link js-tab-link" data-tab="rules" role="tab" aria-selected="false" aria-controls="tab-rules">House Rules</button>
-                        <button class="tab-link js-tab-link" data-tab="fineprint" role="tab" aria-selected="false" aria-controls="tab-fineprint">The Fine Print</button>
-                    </nav>
-                </div>
+               
 
-                <!-- Tab: Availability -->
+                <!-- Availability -->
                 <div id="tab-availability" class="tab-content active" role="tabpanel">
                     <div id="room-options">
                         <div class="room-list-header">
@@ -278,118 +134,8 @@
                         </div>
 
                         <!-- Search Box for Availability -->
-                        <div class="hotel-search-box">
-                            <form class="hotel-search-form" method="get" action="@Url.Action("GetHotel", "Hotel", new { area = "Customer" })">
-                                <input type="hidden" name="id" value="@Model.Hotel.Id" />
-                                <input type="hidden" name="checkInDate" id="checkInDateHidden" value="@(Model.CheckInDate?.ToString("yyyy-MM-dd"))" />
-                                <input type="hidden" name="checkOutDate" id="checkOutDateHidden" value="@(Model.CheckOutDate?.ToString("yyyy-MM-dd"))" />
-
-                                <!-- Combined Check-in/Check-out Date Picker -->
-                                <div class="form-group date-range-container" style="flex: 3;">
-                                    <div class="date-inputs-wrapper" role="button" tabindex="0">
-                                        <div class="date-input-group">
-                                            <span class="date-label">Check In</span>
-                                            <input type="text"
-                                                   placeholder="Select Date"
-                                                   class="date-input"
-                                                   id="checkin"
-                                                   autocomplete="off"
-                                                   readonly
-                                                   aria-label="Check-in date">
-                                        </div>
-                                        <div class="date-separator">—</div>
-                                        <div class="date-input-group">
-                                            <span class="date-label">Check Out</span>
-                                            <input type="text"
-                                                   placeholder="Select Date"
-                                                   class="date-input"
-                                                   id="checkout"
-                                                   autocomplete="off"
-                                                   readonly
-                                                   aria-label="Check-out date">
-                                        </div>
-                                    </div>
-
-                                    <!-- Combined Calendar Dropdown -->
-                                    <div class="calendar-dropdown-combined" id="combinedCalendar" role="dialog" aria-label="Date picker">
-                                        <div class="calendar-navigation">
-                                            <button type="button"
-                                                    class="calendar-nav-btn"
-                                                    id="prevMonthBtn"
-                                                    aria-label="Previous month">
-                                                <i class="fas fa-chevron-left"></i>
-                                            </button>
-                                            <button type="button"
-                                                    class="calendar-nav-btn"
-                                                    id="nextMonthBtn"
-                                                    aria-label="Next month">
-                                                <i class="fas fa-chevron-right"></i>
-                                            </button>
-                                        </div>
-
-                                        <div class="calendar-months-wrapper">
-                                            <!-- First Month -->
-                                            <div class="calendar-month-panel">
-                                                <div class="calendar-month-header">
-                                                    <h3 id="month1Title">October 2025</h3>
-                                                </div>
-                                                <div class="calendar-weekdays">
-                                                    <div class="calendar-weekday">Su</div>
-                                                    <div class="calendar-weekday">Mo</div>
-                                                    <div class="calendar-weekday">Tu</div>
-                                                    <div class="calendar-weekday">We</div>
-                                                    <div class="calendar-weekday">Th</div>
-                                                    <div class="calendar-weekday">Fr</div>
-                                                    <div class="calendar-weekday">Sa</div>
-                                                </div>
-                                                <div class="calendar-days" id="month1Days" role="grid"></div>
-                                            </div>
-
-                                            <!-- Second Month -->
-                                            <div class="calendar-month-panel">
-                                                <div class="calendar-month-header">
-                                                    <h3 id="month2Title">November 2025</h3>
-                                                </div>
-                                                <div class="calendar-weekdays">
-                                                    <div class="calendar-weekday">Su</div>
-                                                    <div class="calendar-weekday">Mo</div>
-                                                    <div class="calendar-weekday">Tu</div>
-                                                    <div class="calendar-weekday">We</div>
-                                                    <div class="calendar-weekday">Th</div>
-                                                    <div class="calendar-weekday">Fr</div>
-                                                    <div class="calendar-weekday">Sa</div>
-                                                </div>
-                                                <div class="calendar-days" id="month2Days" role="grid"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="calendar-footer">
-                                            <button type="button" class="calendar-clear-btn" id="clearDatesBtn">
-                                                <i class="fas fa-times"></i> Clear
-                                            </button>
-                                            <button type="button" class="calendar-today-btn" id="todayBtn">
-                                                <i class="fas fa-calendar-day"></i> Today
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Guests Selector -->
-                                <div class="form-group" style="flex: 1;">
-                                    <select name="guestCount" id="guests" class="form-select" aria-label="Select number of guests">
-                                        <option value="1" selected="@(Model.GuestCount == 1)">1 adult</option>
-                                        <option value="2" selected="@(Model.GuestCount == 2)">2 adults</option>
-                                        <option value="3" selected="@(Model.GuestCount == 3)">3 adults</option>
-                                        <option value="4" selected="@(Model.GuestCount == 4)">4 adults</option>
-                                        <option value="5" selected="@(Model.GuestCount >= 5)">5+ adults</option>
-                                    </select>
-                                </div>
-
-                                <!-- Search Button -->
-                                <button type="submit" class="btn-search">
-                                    Check Availability
-                                </button>
-                            </form>
+                        <div class="mb-5">
+                             <partial name="_SearchBoxPartial" />
                         </div>
 
                         @if (!hasRooms)
@@ -405,191 +151,13 @@
                             foreach (var room in Model.RoomTypes!)
                             {
                                 var count = Model.AvailableRoomsCount.ContainsKey(room.Id) ? Model.AvailableRoomsCount[room.Id] : 0;
-                                var viewData = new ViewDataDictionary(ViewData) { 
-                                    { "Count", count }, 
-                                    { "CheckInDate", Model.CheckInDate },
-                                    { "CheckOutDate", Model.CheckOutDate } 
-                                };
+                                var viewData = new ViewDataDictionary(ViewData);
+                                viewData["Count"] = count;
                                 <partial name="_RoomCard" model="room" view-data="viewData" />
                             }
                         }
                     </div>
-                </div>
-
-                <!-- Tab: Guest Reviews -->
-                <div id="tab-reviews" class="tab-content" role="tabpanel">
-                    <h2 class="section-title">Guest Reviews</h2>
-                    
-                    <div class="review-summary">
-                        <div class="review-score-box">
-                            <div class="review-score-number">9.2</div>
-                            <div class="review-score-label">Superb</div>
-                            <div class="review-score-count">482 reviews</div>
-                        </div>
-                        
-                        <div class="review-categories">
-                            <div class="review-category">
-                                <div class="review-category-name">Cleanliness</div>
-                                <div class="review-bar"><div class="review-bar-fill" style="width: 95%"></div></div>
-                                <div class="review-category-score">9.5</div>
-                            </div>
-                            <div class="review-category">
-                                <div class="review-category-name">Comfort</div>
-                                <div class="review-bar"><div class="review-bar-fill" style="width: 92%"></div></div>
-                                <div class="review-category-score">9.2</div>
-                            </div>
-                            <div class="review-category">
-                                <div class="review-category-name">Location</div>
-                                <div class="review-bar"><div class="review-bar-fill" style="width: 88%"></div></div>
-                                <div class="review-category-score">8.8</div>
-                            </div>
-                            <div class="review-category">
-                                <div class="review-category-name">Facilities</div>
-                                <div class="review-bar"><div class="review-bar-fill" style="width: 90%"></div></div>
-                                <div class="review-category-score">9.0</div>
-                            </div>
-                            <div class="review-category">
-                                <div class="review-category-name">Staff</div>
-                                <div class="review-bar"><div class="review-bar-fill" style="width: 96%"></div></div>
-                                <div class="review-category-score">9.6</div>
-                            </div>
-                            <div class="review-category">
-                                <div class="review-category-name">Value for money</div>
-                                <div class="review-bar"><div class="review-bar-fill" style="width: 87%"></div></div>
-                                <div class="review-category-score">8.7</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @foreach (var review in reviews)
-                    {
-                        <partial name="_ReviewCard" model="review" />
-                    }
-                </div>
-
-                <!-- Tab: House Rules -->
-                <div id="tab-rules" class="tab-content" role="tabpanel">
-                    <h2 class="section-title">House Rules</h2>
-                    <p class="description-text">
-                        @Model.Hotel.Name takes special requests – add in the next step!
-                    </p>
-
-                    <div class="rules-grid">
-                        <div class="rule-item">
-                            <div class="rule-icon"><i class="fas fa-clock" aria-hidden="true"></i></div>
-                            <div class="rule-content">
-                                <h4>Check-in</h4>
-                                <p>From 14:00 to 23:30</p>
-                            </div>
-                        </div>
-                        
-                        <div class="rule-item">
-                            <div class="rule-icon"><i class="fas fa-door-open" aria-hidden="true"></i></div>
-                            <div class="rule-content">
-                                <h4>Check-out</h4>
-                                <p>Until 12:00</p>
-                            </div>
-                        </div>
-
-                        <div class="rule-item">
-                            <div class="rule-icon"><i class="fas fa-ban" aria-hidden="true"></i></div>
-                            <div class="rule-content">
-                                <h4>Cancellation</h4>
-                                <p>Free cancellation up to 24 hours before check-in</p>
-                            </div>
-                        </div>
-
-                        <div class="rule-item">
-                            <div class="rule-icon"><i class="fas fa-credit-card" aria-hidden="true"></i></div>
-                            <div class="rule-content">
-                                <h4>Prepayment</h4>
-                                <p>No prepayment needed – pay at the property</p>
-                            </div>
-                        </div>
-
-                        <div class="rule-item">
-                            <div class="rule-icon"><i class="fas fa-child" aria-hidden="true"></i></div>
-                            <div class="rule-content">
-                                <h4>Children & beds</h4>
-                                <p>Children of all ages are welcome. Free for children under 6 years</p>
-                            </div>
-                        </div>
-
-                        <div class="rule-item">
-                            <div class="rule-icon"><i class="fas fa-smoking-ban" aria-hidden="true"></i></div>
-                            <div class="rule-content">
-                                <h4>Smoking</h4>
-                                <p>Non-smoking throughout. Designated smoking areas available</p>
-                            </div>
-                        </div>
-
-                        <div class="rule-item">
-                            <div class="rule-icon"><i class="fas fa-paw" aria-hidden="true"></i></div>
-                            <div class="rule-content">
-                                <h4>Pets</h4>
-                                <p>Pets are not allowed</p>
-                            </div>
-                        </div>
-
-                        <div class="rule-item">
-                            <div class="rule-icon"><i class="fas fa-glass-cheers" aria-hidden="true"></i></div>
-                            <div class="rule-content">
-                                <h4>Parties</h4>
-                                <p>Parties/events are not allowed</p>
-                            </div>
-                        </div>
-
-                        <div class="rule-item">
-                            <div class="rule-icon"><i class="fas fa-volume-mute" aria-hidden="true"></i></div>
-                            <div class="rule-content">
-                                <h4>Quiet hours</h4>
-                                <p>Guests are kindly requested to keep noise to a minimum between 22:00 and 08:00</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab: Fine Print -->
-                <div id="tab-fineprint" class="tab-content" role="tabpanel">
-                    <h2 class="section-title">The Fine Print</h2>
-                    
-                    <div class="info-card">
-                        <h3 style="font-weight: 600; margin-bottom: 12px;">Important Information</h3>
-                        <p style="margin-bottom: 16px; line-height: 1.7;">
-                            Please note that cultural norms and guest policies may differ by country and by property. 
-                            The policies listed are provided by the property.
-                        </p>
-
-                        <h4 style="font-weight: 600; margin: 24px 0 12px;">Payment Options</h4>
-                        <p style="margin-bottom: 16px; line-height: 1.7;">
-                            This property accepts the following forms of payment: Credit cards, Debit cards, and Cash. 
-                            Please note that any additional charges (such as minibar, telephone, room service, etc.) 
-                            should be settled before check-out.
-                        </p>
-
-                        <h4 style="font-weight: 600; margin: 24px 0 12px;">Age Requirements</h4>
-                        <p style="margin-bottom: 16px; line-height: 1.7;">
-                            The minimum age for check-in is 18 years. Guests under the minimum age must be accompanied 
-                            by a parent or guardian.
-                        </p>
-
-                        <h4 style="font-weight: 600; margin: 24px 0 12px;">Identification</h4>
-                        <p style="margin-bottom: 16px; line-height: 1.7;">
-                            All guests, including children, must be present at check-in and show a valid government-issued 
-                            photo ID card or passport.
-                        </p>
-
-                        <h4 style="font-weight: 600; margin: 24px 0 12px;">Additional Information</h4>
-                        <ul style="margin: 0; padding-left: 24px; line-height: 2;">
-                            <li>Please inform the property in advance of your expected arrival time</li>
-                            <li>Extra beds are available upon request and subject to availability</li>
-                            <li>Air conditioning may be seasonal</li>
-                            <li>The property reserves the right to pre-authorize credit cards prior to arrival</li>
-                            <li>Free WiFi is available in all areas</li>
-                            <li>Free private parking is available on site (reservation not needed)</li>
-                        </ul>
-                    </div>
-                </div>
+                </div>            
             </div>
         </div>
     </div>
@@ -611,90 +179,29 @@
     </button>
 </div>
 
-<!-- Structured Data -->
-<script type="application/ld+json">
-{
-  "@@context": "https://schema.org",
-  "@@type": "Hotel",
-  "name": "@Model.Hotel.Name",
-  "description": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.Hotel.Description))",
-  "address": {
-    "@@type": "PostalAddress",
-    "streetAddress": "@Model.Hotel.Address",
-    "addressLocality": "@Model.Hotel.City?.Name",
-    "addressCountry": "EG"
-  },
-  "starRating": {
-    "@@type": "Rating",
-    "ratingValue": "@Model.Hotel.StarRating"
-  },
-  "priceRange": "EGP @minPrice.ToString("N0")+"
-}
-</script>
 
 @section Scripts {
-    <script src="~/javascript/main.js"></script>
+
+    @{
+        Func<string?, string> norm = path =>
+            string.IsNullOrWhiteSpace(path)
+                ? Url.Content("~/images/placeholder-hotel.jpg")
+                : path.Replace("\\", "/");
+
+        // Build the gallery array (main image + gallery images)
+        var gallery = new List<string> { norm(mainImageSrc) };
+
+        if (Model.Hotel?.GalleryImages != null)
+        {
+            gallery.AddRange(Model.Hotel.GalleryImages.Select(g => norm(g.ImageUrl)));
+        }
+    }
+
     <script>
-        // Pass gallery images to external JS
-        window.hotelGalleryImages = [
-            @if (!string.IsNullOrEmpty(Model.Hotel.MainImage))
-            {
-                @Html.Raw("\"" + Model.Hotel.MainImage.Replace("\\", "/") + "\"")
-            }
-            @if (Model.Hotel.GalleryImages != null && Model.Hotel.GalleryImages.Count > 0)
-            {
-                foreach (var img in Model.Hotel.GalleryImages)
-                {
-                    @Html.Raw(",\"" + img.ImageUrl.Replace("\\", "/") + "\"")
-                }
-            }
-        ];
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // Wait for main.js to initialize combinedCalendar
-            // Since main.js runs on DOMContentLoaded as well, we might need to wait a tick or ensure this runs after.
-            // But since this script is after main.js in the DOM, it should be fine if main.js attaches to window or we access the instance.
-            // main.js defines 'combinedCalendar' as a global variable.
-
-            if (typeof combinedCalendar !== 'undefined') {
-                // Monkey patch updateInputs to update hidden fields
-                const originalUpdateInputs = combinedCalendar.updateInputs.bind(combinedCalendar);
-                combinedCalendar.updateInputs = function() {
-                    originalUpdateInputs();
-                    
-                    if (this.checkinDate) {
-                        // Adjust for timezone offset to ensure we get the correct YYYY-MM-DD
-                        const offset = this.checkinDate.getTimezoneOffset();
-                        const adjustedDate = new Date(this.checkinDate.getTime() - (offset*60*1000));
-                        document.getElementById('checkInDateHidden').value = adjustedDate.toISOString().split('T')[0];
-                    } else {
-                         document.getElementById('checkInDateHidden').value = '';
-                    }
-                    
-                    if (this.checkoutDate) {
-                        const offset = this.checkoutDate.getTimezoneOffset();
-                        const adjustedDate = new Date(this.checkoutDate.getTime() - (offset*60*1000));
-                        document.getElementById('checkOutDateHidden').value = adjustedDate.toISOString().split('T')[0];
-                    } else {
-                        document.getElementById('checkOutDateHidden').value = '';
-                    }
-                };
-
-                // Initialize with dates from Model
-                const checkInStr = '@(Model.CheckInDate?.ToString("yyyy-MM-dd"))';
-                const checkOutStr = '@(Model.CheckOutDate?.ToString("yyyy-MM-dd"))';
-                
-                if (checkInStr) {
-                    combinedCalendar.checkinDate = new Date(checkInStr);
-                }
-                if (checkOutStr) {
-                    combinedCalendar.checkoutDate = new Date(checkOutStr);
-                }
-                
-                combinedCalendar.updateInputs();
-                combinedCalendar.renderCalendar();
-            }
-        });
+        window.hotelGalleryImages = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(gallery));
     </script>
-    <script src="~/js/hotel-details.js" asp-append-version="true" defer></script>
+
+    <script src="~/javascript/main.js" asp-append-version="true"></script>
+    <script src="~/javascript/hotel-details.js" asp-append-version="true" defer></script>
 }
+

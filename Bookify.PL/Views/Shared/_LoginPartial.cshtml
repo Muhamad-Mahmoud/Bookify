@@ -4,70 +4,6 @@
 @inject SignInManager<Customer> SignInManager
 @inject UserManager<Customer> UserManager
 
-<style>
-    .user-profile-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 12px;
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 20px;
-        color: white;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-    }
-
-    .user-profile-badge:hover {
-        background: rgba(255, 255, 255, 0.25);
-    }
-
-    .user-avatar-mini {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: white;
-        color: #003580;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 0.85rem;
-    }
-
-    .logout-btn {
-        color: white;
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-    }
-
-    .logout-btn:hover {
-        color: #ffc107;
-    }
-
-    .navbar-nav .nav-link {
-        color: rgba(255, 255, 255, 0.9) !important;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .navbar-nav .nav-link:hover {
-        color: #ffc107 !important;
-    }
-
-    .navbar-nav .nav-link i {
-        font-size: 1.1rem;
-    }
-</style>
-
 @if (SignInManager.IsSignedIn(User))
 {
     var user = await UserManager.GetUserAsync(User);
@@ -99,23 +35,18 @@
     }
     else
     {
-        <!-- Main Layout Version - Enhanced -->
-        <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-                <a id="manage" class="user-profile-badge" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage your account">
-                    <div class="user-avatar-mini">@userInitial</div>
-                    <span>@UserManager.GetUserName(User)</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <form id="logoutForm" class="form-inline" style="display: inline;" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button id="logout" type="submit" class="logout-btn border-0" style="background: none;">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
-                    </button>
-                </form>
-            </li>
-        </ul>
+        <!-- Main Layout Version - Enhanced for New Navbar -->
+        <a class="nav-user-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="@UserManager.GetUserName(User)">
+            <div style="width: 32px; height: 32px; background: var(--color-primary); color: var(--color-black); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">
+                @userInitial
+            </div>
+            <span>@UserManager.GetUserName(User)</span>
+        </a>
+        <form id="logoutForm" style="display: inline;" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button id="logout" type="submit" class="nav-icon-btn" title="Logout" style="border: none; cursor: pointer;">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </form>
     }
 }
 else
@@ -141,4 +72,3 @@ else
         </ul>
     }
 }
-

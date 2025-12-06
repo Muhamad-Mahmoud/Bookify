@@ -1,0 +1,208 @@
+/* =====================================================
+   BOOKIFY - SECTION STYLES
+   Layouts, Headers, Grids, Filters
+   ===================================================== */
+
+.section-hotels,
+.section-cities,
+.section-features {
+    padding: var(--spacing-3xl) 0;
+}
+
+.section-alt {
+    background: var(--color-gray-50);
+}
+
+.section-header-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+}
+
+.section-header-modern.text-center {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--color-black);
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+
+.section-subtitle {
+    font-size: 18px;
+    color: var(--color-gray-600);
+    font-weight: 400;
+}
+
+/* ===== FILTERS ===== */
+.section-filters {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.filter-btn {
+    padding: 12px 24px;
+    background: transparent;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-gray-700);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--color-black);
+    border-color: var(--color-black);
+    color: var(--color-white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== VIEW ALL BUTTON ===== */
+.btn-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--color-black);
+    transition: all 0.3s ease;
+}
+
+.btn-view-all:hover {
+    color: var(--color-primary);
+    gap: 16px;
+    transform: translateX(3px);
+}
+
+.btn-view-all i {
+    transition: transform 0.3s ease;
+}
+
+.btn-view-all:hover i {
+    transform: translateX(3px);
+}
+
+/* ===== GRIDS ===== */
+.hotels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 32px;
+}
+
+.cities-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 28px;
+}
+
+.features-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+}
+
+/* ===== CAROUSEL ===== */
+.hotels-carousel-wrapper {
+    position: relative;
+    padding: 0 20px;
+}
+
+.hotels-carousel {
+    display: flex;
+    gap: 28px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 16px 4px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.hotels-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.hotels-carousel .hotel-card-modern {
+    flex: 0 0 350px;
+    width: 350px;
+}
+
+/* ===== CAROUSEL NAVIGATION ===== */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--color-white);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+    color: var(--color-black);
+    z-index: 10;
+}
+
+.carousel-nav:hover {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    background: var(--color-black);
+    color: var(--color-primary);
+}
+
+.carousel-nav.prev {
+    left: -26px;
+}
+
+.carousel-nav.next {
+    right: -26px;
+}
+
+/* Responsive Sections */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 32px;
+    }
+
+    .section-header-modern {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .section-filters {
+        overflow-x: auto;
+        padding-bottom: 8px;
+        width: 100%;
+    }
+
+    .filter-btn {
+        white-space: nowrap;
+    }
+
+    .hotels-carousel .hotel-card-modern {
+        flex: 0 0 300px;
+        width: 300px;
+    }
+
+    .carousel-nav {
+        display: none;
+    }
+
+    .hotels-carousel-wrapper {
+        padding: 0;
+    }
+}

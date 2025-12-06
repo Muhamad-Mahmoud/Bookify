@@ -1,0 +1,140 @@
+@{
+    var location = ViewData["Location"] as string;
+    var checkInDate = ViewData["CheckInDate"] as DateTime?;
+    var checkOutDate = ViewData["CheckOutDate"] as DateTime?;
+    var guestCount = ViewData["GuestCount"] as int? ?? 2;
+
+    string checkInDisplay = checkInDate.HasValue ? checkInDate.Value.ToString("ddd, MMM d") : "";
+    string checkOutDisplay = checkOutDate.HasValue ? checkOutDate.Value.ToString("ddd, MMM d") : "";
+    
+    // Hidden values for form submission
+    string checkInValue = checkInDate.HasValue ? checkInDate.Value.ToString("yyyy-MM-dd") : "";
+    string checkOutValue = checkOutDate.HasValue ? checkOutDate.Value.ToString("yyyy-MM-dd") : "";
+
+    var formAction = ViewData["FormAction"] as string ?? Url.Action("Search", "Hotel", new { area = "Customer" });
+    var extraHidden = ViewData["ExtraHiddenFields"] as IDictionary<string, string>;
+    var locationReadOnly = ViewData["LocationReadOnly"] as bool? ?? false;
+}
+<!-- Search Box -->
+<div class="search-wrapper">
+    <div class="container">
+        <div class="search-box-modern">
+            <div class="search-tabs">
+                <button class="search-tab active">
+                    <i class="fas fa-bed"></i>
+                    <span>Stays</span>
+                </button>
+            </div>
+
+            <form class="search-form-modern" method="get" action="@formAction">
+                @if (extraHidden != null)
+                {
+                    foreach (var item in extraHidden)
+                    {
+                        <input type="hidden" name="@item.Key" value="@item.Value" />
+                    }
+                }
+                <input type="hidden" name="checkInDate" id="checkInDateHidden" value="@checkInValue" />
+                <input type="hidden" name="checkOutDate" id="checkOutDateHidden" value="@checkOutValue" />
+
+                <div class="search-field">
+                    <label class="search-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Location
+                    </label>
+                    <input type="text" name="location" value="@location" placeholder="Where are you going?" class="search-input" @(locationReadOnly ? "readonly style=background-color:#f9fafb;cursor:default;" : "") />
+                </div>
+
+                <div class="date-inputs-wrapper">
+                    <div class="search-field date-field">
+                        <label class="search-label">
+                            <i class="fas fa-calendar-alt"></i>
+                            Check In
+                        </label>
+                        <input type="text" id="checkin" value="@checkInDisplay" placeholder="Add date" class="search-input" readonly />
+                    </div>
+
+                    <div class="search-field date-field">
+                        <label class="search-label">
+                            <i class="fas fa-calendar-alt"></i>
+                            Check Out
+                        </label>
+                        <input type="text" id="checkout" value="@checkOutDisplay" placeholder="Add date" class="search-input" readonly />
+                    </div>
+                </div>
+
+                <div class="search-field">
+                    <label class="search-label">
+                        <i class="fas fa-user-friends"></i>
+                        Guests
+                    </label>
+                    <select name="guestCount" class="search-input">
+                        <option value="1" selected="@(guestCount == 1)">1 Guest</option>
+                        <option value="2" selected="@(guestCount == 2)">2 Guests</option>
+                        <option value="3" selected="@(guestCount == 3)">3 Guests</option>
+                        <option value="4" selected="@(guestCount == 4)">4 Guests</option>
+                        <option value="5" selected="@(guestCount >= 5)">5+ Guests</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+
+            <!-- Combined Calendar Dropdown -->
+            <div class="calendar-dropdown-combined" id="combinedCalendar">
+                <div class="calendar-navigation">
+                    <button type="button" class="calendar-nav-btn" id="prevMonthBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button type="button" class="calendar-nav-btn" id="nextMonthBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="calendar-months-wrapper">
+                    <div class="calendar-month-panel">
+                        <div class="calendar-month-header">
+                            <h3 id="month1Title">October 2025</h3>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div class="calendar-weekday">Su</div>
+                            <div class="calendar-weekday">Mo</div>
+                            <div class="calendar-weekday">Tu</div>
+                            <div class="calendar-weekday">We</div>
+                            <div class="calendar-weekday">Th</div>
+                            <div class="calendar-weekday">Fr</div>
+                            <div class="calendar-weekday">Sa</div>
+                        </div>
+                        <div class="calendar-days" id="month1Days"></div>
+                    </div>
+
+                    <div class="calendar-month-panel">
+                        <div class="calendar-month-header">
+                            <h3 id="month2Title">November 2025</h3>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div class="calendar-weekday">Su</div>
+                            <div class="calendar-weekday">Mo</div>
+                            <div class="calendar-weekday">Tu</div>
+                            <div class="calendar-weekday">We</div>
+                            <div class="calendar-weekday">Th</div>
+                            <div class="calendar-weekday">Fr</div>
+                            <div class="calendar-weekday">Sa</div>
+                        </div>
+                        <div class="calendar-days" id="month2Days"></div>
+                    </div>
+                </div>
+
+                <div class="calendar-footer">
+                    <button type="button" class="calendar-clear-btn" id="clearDatesBtn">Clear</button>
+                    <button type="button" class="calendar-today-btn" id="todayBtn">Today</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="calendarBackdrop" class="calendar-backdrop"></div>

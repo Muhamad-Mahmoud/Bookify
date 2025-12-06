@@ -1,0 +1,224 @@
+/* =====================================================
+   BOOKIFY - FOOTER STYLES
+   Site Footer, Newsletter, Scroll Top
+   ===================================================== */
+
+.site-footer {
+    background: #000000;
+    color: #ffffff;
+    padding: 80px 0 40px;
+    margin-top: 80px;
+    border-top: 1px solid #1f2937;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+.footer-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: #ffffff;
+}
+
+.footer-brand i {
+    color: #FFE600;
+    /* Bright Yellow */
+    font-size: 32px;
+}
+
+.footer-description {
+    color: #9CA3AF;
+    /* Gray-400 */
+    line-height: 1.6;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.social-links {
+    display: flex;
+    gap: 12px;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: #ffffff;
+}
+
+.social-link:hover {
+    background: #FFE600;
+    color: #000000;
+    transform: translateY(-3px);
+}
+
+.footer-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #ffffff;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: #9CA3AF;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #FFE600;
+    padding-left: 4px;
+}
+
+.newsletter-form {
+    display: flex;
+    margin-bottom: 24px;
+}
+
+.newsletter-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #374151;
+    background: #111827;
+    color: #ffffff;
+    border-radius: 8px 0 0 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.newsletter-input:focus {
+    border-color: #FFE600;
+}
+
+.newsletter-btn {
+    padding: 12px 24px;
+    background: #FFE600;
+    color: #000000;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.newsletter-btn:hover {
+    background: #ffffff;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.payment-methods img {
+    height: 24px;
+    filter: grayscale(1) brightness(2);
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+
+.payment-methods img:hover {
+    opacity: 1;
+    filter: none;
+}
+
+.footer-bottom {
+    padding-top: 32px;
+    border-top: 1px solid #1f2937;
+    text-align: center;
+    color: #6B7280;
+    font-size: 14px;
+}
+
+.footer-bottom i {
+    color: #EF4444;
+}
+
+/* ===== SCROLL TOP ===== */
+.scroll-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 48px;
+    height: 48px;
+    background: #FFE600;
+    color: #000000;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999;
+    cursor: pointer;
+}
+
+.scroll-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-top:hover {
+    background: #ffffff;
+    transform: translateY(-4px);
+}
+
+/* Responsive Footer */
+@media (max-width: 1024px) {
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-brand,
+    .social-links,
+    .payment-methods {
+        justify-content: center;
+    }
+
+    .newsletter-form {
+        max-width: 400px;
+        margin: 0 auto 24px;
+    }
+}
