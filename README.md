@@ -79,15 +79,3 @@ The project follows a clean **N-Tier Architecture** to ensure scalability and ma
     ```bash
     dotnet run --project Bookify.PL
     ```
-
-## 📸 Screenshots
-
-*(Add screenshots of your Home Page, Search Results, and Admin Dashboard here)*
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License.
