@@ -2,6 +2,8 @@
 
 Bookify is a modern, full-featured hotel booking web application built with **ASP.NET Core MVC**. It provides a seamless experience for customers to find and book stays, while offering powerful tools for hotel owners and administrators to manage their properties and reservations.
 
+**Live Demo:** http://bookingo.tryasp.net/
+
 ## ✨ Key Features
 
 ### 🌍 For Customers
@@ -73,6 +75,3 @@ The project follows a clean **N-Tier Architecture** to ensure scalability and ma
     dotnet run --project Bookify.PL
     ```
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
->>>>>>> e28f71b477d574e3c4d12f488254a7ffa0e6b203
