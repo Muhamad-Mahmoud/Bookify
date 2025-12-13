@@ -15,14 +15,13 @@ namespace Bookify.BL.Services
         {
             var options = new SessionCreateOptions
             {
-                PaymentMethodTypes = new List<string> { "card" },
                 LineItems = new List<SessionLineItemOptions>
                     {
                         new SessionLineItemOptions
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = (long)((reservation.TotalPrice) * 100),
+                            UnitAmount = (long)((reservation.TotalPrice) * 100), 
                             Currency = "egp",
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
@@ -34,7 +33,7 @@ namespace Bookify.BL.Services
                     }
                 },
                 Mode = "payment",
-                SuccessUrl = $"{domain}Customer/Booking/Confirmation?reservationId={reservation.Id}",
+                SuccessUrl = $"{domain}Customer/Booking/Confirmation?sessionId={{CHECKOUT_SESSION_ID}}&reservationId={reservation.Id}",
                 CancelUrl = $"{domain}Customer/Booking/Cancel?reservationId={reservation.Id}"
             };
 

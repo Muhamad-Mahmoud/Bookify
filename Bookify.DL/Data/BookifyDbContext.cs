@@ -21,6 +21,7 @@ namespace Bookify.DL.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<RoomImage> RoomImages { get; set; }
         public DbSet<HotelImage> HotelImages { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -75,6 +76,20 @@ namespace Bookify.DL.Data
                 .WithMany(h => h.RoomTypes)
                 .HasForeignKey(rt => rt.HotelId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure Review-Hotel relationship
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Hotel)
+                .WithMany(h => h.Reviews)
+                .HasForeignKey(r => r.HotelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Review-Customer relationship
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Customer)
+                .WithMany()
+                .HasForeignKey(r => r.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
     }

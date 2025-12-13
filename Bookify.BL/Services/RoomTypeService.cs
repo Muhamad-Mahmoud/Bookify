@@ -30,42 +30,44 @@ namespace Bookify.BL.Services
             return await _unitOfWork.RoomTypes.GetAllAsync(filter, includeProperties);
         }
 
-        // Get All Room Types With Availability 
         public async Task<IEnumerable<RoomType>> GetRoomTypesWithAvailabilityAsync(
-                int hotelId, DateTime checkIn, DateTime checkOut)
+        int hotelId, DateTime checkIn, DateTime checkOut)
         {
+            // Get room types 
             var roomTypes = await _unitOfWork.RoomTypes.GetAllAsync(
                 rt => rt.HotelId == hotelId,
                 includeProperties: "Rooms"
             );
 
+            // Get reservations only related to this hotel 
             var overlappingReservations = await _unitOfWork.Reservations.GetAllAsync(
                 r => r.Status != ReservationStatus.Cancelled
                      && r.CheckInDate < checkOut
-                     && r.CheckOutDate > checkIn,
+                     && r.CheckOutDate > checkIn
+                     && r.RoomReserved.Any(rr => rr.Room.RoomType.HotelId == hotelId),
                 includeProperties: "RoomReserved"
             );
 
+            // Make a HashSet of booked roomIds
+            var bookedRoomIds = overlappingReservations
+                .SelectMany(r => r.RoomReserved)
+                .Select(rr => rr.RoomId)
+                .ToHashSet();
+
+            // Calculate availability per room type
             foreach (var rt in roomTypes)
             {
-                var roomIds = rt.Rooms.Select(r => r.Id).ToList();
-
-                var bookedRoomIds = overlappingReservations
-                    .SelectMany(r => r.RoomReserved)
-                    .Where(rr => roomIds.Contains(rr.RoomId))
-                    .Select(rr => rr.RoomId)
-                    .ToHashSet();
-
-                rt.AvailableRoomsCount = roomIds.Count(id => !bookedRoomIds.Contains(id));
+                rt.AvailableRoomsCount = rt.Rooms
+                    .Count(room => !bookedRoomIds.Contains(room.Id) && room.Status != RoomStatus.Maintenance);
             }
 
             return roomTypes;
         }
 
 
-        public async Task<RoomType?> GetRoomTypeByIdAsync(int id)
+        public async Task<RoomType?> GetRoomTypeByIdAsync(int id, string? includeProperties = null)
         {
-            return await _unitOfWork.RoomTypes.GetAsync(id);
+            return await _unitOfWork.RoomTypes.GetAsync(rt => rt.Id == id, includeProperties);
         }
 
         public async Task<bool> AddRoomTypeAsync(RoomType roomType)
@@ -122,7 +124,7 @@ namespace Bookify.BL.Services
             }
 
             // Return the relative URL path
-            return Path.Combine("\\", productPath, fileName);
+            return $"/images/RoomTypes/RoomType-{RoomTypeId}/{fileName}";
         }
 
         public async Task<bool> DeleteRoomImagesAsync(int roomTypeId)
@@ -178,7 +180,7 @@ namespace Bookify.BL.Services
 
                 RoomImage roomImage = new()
                 {
-                    ImageUrl = Path.Combine("\\", productPath, fileName),
+                    ImageUrl = $"/images/RoomTypes/RoomType-{RoomTypeId}/{fileName}",
                     RoomTypeId = RoomTypeId
                 };
 
@@ -226,7 +228,7 @@ namespace Bookify.BL.Services
 
                 RoomImage roomImage = new()
                 {
-                    ImageUrl = Path.Combine("\\", productPath, fileName),
+                    ImageUrl = $"/images/RoomTypes/RoomType-{RoomTypeId}/{fileName}",
                     RoomTypeId = RoomTypeId
                 };
 

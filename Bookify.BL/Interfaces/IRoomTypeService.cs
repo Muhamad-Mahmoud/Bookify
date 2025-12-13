@@ -13,7 +13,7 @@ namespace Bookify.BL.Interfaces
     {
         Task<IEnumerable<RoomType>> GetAllRoomTypesAsync(Expression<Func<RoomType, bool>>? filter = null, string? includeProperties = null);
         Task<IEnumerable<RoomType>> GetRoomTypesWithAvailabilityAsync(int hotelId, DateTime checkIn, DateTime checkOut);
-        Task<RoomType?> GetRoomTypeByIdAsync(int id);
+        Task<RoomType?> GetRoomTypeByIdAsync(int id, string? includeProperties = null);
         Task<bool> AddRoomTypeAsync(RoomType RoomType);
         Task<bool> UpdateRoomTypeAsync(RoomType RoomType);
         Task<bool> DeleteRoomTypeAsync(int id);

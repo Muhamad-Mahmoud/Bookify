@@ -1,0 +1,133 @@
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .profile-header-simple {
+        gap: 25px;
+    }
+
+    .profile-stats {
+        gap: 25px;
+        padding-left: 25px;
+    }
+}
+
+@media (max-width: 992px) {
+    .profile-header-simple {
+        flex-wrap: wrap;
+        padding: 30px;
+    }
+
+    .profile-stats {
+        width: 100%;
+        border-left: none;
+        border-top: 2px solid var(--color-gray-200);
+        padding-left: 0;
+        padding-top: 20px;
+        justify-content: center;
+        gap: 25px;
+    }
+
+    .profile-container {
+        padding: 30px 20px;
+    }
+
+    .profile-sidebar {
+        position: relative;
+        top: 0;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-header-simple {
+        flex-direction: column;
+        text-align: center;
+        padding: 25px;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+    }
+
+    .profile-basic-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-stats {
+        gap: 20px;
+    }
+
+    .stat-value {
+        font-size: 1.4rem;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    .profile-card-header {
+        padding: 20px;
+    }
+
+    .profile-container {
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header-simple {
+        padding: 20px;
+    }
+
+    .profile-avatar {
+        width: 90px;
+        height: 90px;
+        border-width: 3px;
+    }
+
+    .avatar-change-btn {
+        width: 34px;
+        height: 34px;
+        border-width: 2px;
+    }
+
+    .profile-name {
+        font-size: 1.3rem;
+    }
+
+    .profile-stats {
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        flex: 1;
+        min-width: 80px;
+    }
+
+    .profile-container {
+        padding: 15px 10px;
+    }
+
+    .profile-sidebar {
+        padding: 20px;
+    }
+
+    .sidebar-title {
+        font-size: 0.9rem;
+    }
+
+    .profile-sidebar .nav-link {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+}

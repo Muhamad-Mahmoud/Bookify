@@ -1,14 +1,66 @@
-@if (TempData["success"] != null)
+@{
+    // Check for various keys for Success messages
+    var successMessage = TempData["SuccessMessage"] as string 
+                      ?? TempData["success"] as string 
+                      ?? TempData["Success"] as string 
+                      ?? TempData["message"] as string;
+
+    // Check for various keys for Error messages
+    var errorMessage = TempData["ErrorMessage"] as string 
+                    ?? TempData["error"] as string 
+                    ?? TempData["Error"] as string;
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
 {
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script type="text/javascript">
-        toastr.success('@TempData["success"]');
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: '@successMessage',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: '#ffffff',
+                iconColor: '#28a745',
+                customClass: {
+                    popup: 'animated fadeInDown'
+                },
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+        });
     </script>
 }
-@if (TempData["error"] != null)
+
+@if (!string.IsNullOrEmpty(errorMessage))
 {
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script type="text/javascript">
-        toastr.error('@TempData["error"]');
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: '@errorMessage',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                background: '#ffffff',
+                iconColor: '#dc3545',
+                customClass: {
+                    popup: 'animated fadeInDown'
+                },
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+        });
     </script>
 }

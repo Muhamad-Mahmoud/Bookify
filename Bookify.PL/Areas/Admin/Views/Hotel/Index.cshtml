@@ -25,7 +25,7 @@
                         <th>City</th>
                         <th>Owner</th>
                         <th class="text-center">Status</th>
-                        <th class="text-center" style="width: 280px;">Actions</th>
+                        <th class="text-center" style="width: 380px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,6 +79,19 @@
                                             </a>
                                         }
                                     }
+
+                                    <a asp-area="Customer"
+                                       asp-controller="Hotel"
+                                       asp-action="GetHotel"
+                                       asp-route-id="@item.Id"
+                                       asp-route-checkInDate="@DateTime.Now"
+                                       asp-route-checkOutDate="@DateTime.Now.AddDays(1)"
+                                       asp-route-guestCount="2"
+                                       class="btn-sm-custom btn-approve"
+                                       title="View Hotel (Customer View)"
+                                       target="_blank">
+                                        <i class="fas fa-eye"></i> View Hotel
+                                    </a>
 
                                     <a asp-controller="Hotel"
                                        asp-action="Edit"

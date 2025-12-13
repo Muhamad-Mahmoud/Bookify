@@ -21,6 +21,7 @@
                 <thead>
                     <tr>
                         <th class="text-center" style="width: 80px;">ID</th>
+                        <th>Hotel Name</th>
                         <th>Room Number</th>
                         <th>Floor</th>
                         <th>Room Type</th>
@@ -34,6 +35,9 @@
                         <tr>
                             <td class="text-center">
                                 <span class="hotel-id-badge">@item.Id</span>
+                            </td>
+                            <td>
+                                <span class="hotel-city">@item.RoomType?.Hotel?.Name</span>
                             </td>
                             <td>
                                 <span class="hotel-name">@item.RoomNumber</span>

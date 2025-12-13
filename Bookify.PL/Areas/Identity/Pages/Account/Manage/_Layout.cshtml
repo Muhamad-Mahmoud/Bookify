@@ -9,19 +9,66 @@
     }
 }
 
-<div class="container py-5">
-    <h1>Manage your account</h1>
+<link rel="stylesheet" href="~/css/profile.css" />
 
-    <div>
-        <h2>Change your account settings</h2>
-        <hr />
-        <div class="row">
-            <div class="col-md-3">
+<style>
+    /* Make header sticky */
+    .main-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    
+    /* Container for profile management */
+    .profile-manage-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 24px;
+    }
+    
+    .profile-manage-row {
+        display: flex;
+        gap: 30px;
+    }
+    
+    /* Sticky Sidebar */
+    .profile-manage-sidebar {
+        width: 280px;
+        flex-shrink: 0;
+    }
+    
+    .profile-manage-sidebar-inner {
+        position: sticky;
+        top: 100px;
+    }
+    
+    .profile-manage-content {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    /* Override Bootstrap nav-pills for our custom design */
+    .profile-sidebar .nav-pills .nav-link {
+        border-radius: var(--radius-sm) !important;
+    }
+    
+    .profile-sidebar .nav-pills .nav-link.active {
+        background: var(--color-primary) !important;
+        color: var(--color-black) !important;
+    }
+    
+   
+</style>
+
+<div class="profile-manage-container">
+    <div class="profile-manage-row">
+        <div class="profile-manage-sidebar">
+            <div class="profile-manage-sidebar-inner">
                 <partial name="_ManageNav" />
             </div>
-            <div class="col-md-9">
-                @RenderBody()
-            </div>
+        </div>
+        <div class="profile-manage-content">
+            @RenderBody()
         </div>
     </div>
 </div>

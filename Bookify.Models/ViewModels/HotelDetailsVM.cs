@@ -14,5 +14,9 @@ namespace Bookify.Models.ViewModels
         public DateTime? CheckOutDate { get; set; }
         public int GuestCount { get; set; }
         public Dictionary<int, int> AvailableRoomsCount { get; set; } = new Dictionary<int, int>();
+
+        // Review properties
+        public IEnumerable<Review>? Reviews { get; set; }
+        public bool CanReview { get; set; }
     }
 }

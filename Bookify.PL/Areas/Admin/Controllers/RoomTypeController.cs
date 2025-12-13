@@ -107,7 +107,7 @@ namespace Bookify.PL.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var roomType = await _roomTypeService.GetRoomTypeByIdAsync(id);
+            var roomType = await _roomTypeService.GetRoomTypeByIdAsync(id, includeProperties: "GalleryImages");
             if (roomType == null)
             {
                 return NotFound();

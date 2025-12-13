@@ -1,30 +1,146 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "My Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </form>
+<link rel="stylesheet" href="~/css/profile.css" />
+<link rel="stylesheet" href="~/css/profile-responsive.css" />
+
+<!-- Status Message -->
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-@(Model.StatusMessage.StartsWith("Error") ? "danger" : "success") alert-dismissible fade show" role="alert">
+        @Model.StatusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
+}
+
+<!-- Profile Header (Without Cover) -->
+<div class="profile-header-simple">
+    <div class="profile-avatar-container">
+        <img src="@Model.ProfileImageUrl" alt="Profile" class="profile-avatar" id="profilePreview">
+        <label for="profileImageInput" class="avatar-change-btn">
+            <i class="fas fa-camera"></i>
+        </label>
+    </div>
+
+    <div class="profile-basic-info">
+        <h1 class="profile-name">@Model.Input?.Name</h1>
+        <p class="profile-username"><i class="fas fa-at"></i> @Model.Username</p>
+        <p class="profile-email"><i class="fas fa-envelope"></i> @Model.Email</p>
+    </div>
+
+    <div class="profile-stats">
+        <div class="stat-item">
+            <div class="stat-value">@Model.ReservationCount</div>
+            <div class="stat-label">Bookings</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">@Model.ReviewCount</div>
+            <div class="stat-label">Reviews</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">@Model.FavoriteCount</div>
+            <div class="stat-label">Favorites</div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Edit Form -->
+<div class="profile-card">
+    <div class="profile-card-header">
+        <h3><i class="fas fa-user-edit"></i> Personal Information</h3>
+        <p>Update your account details and preferences</p>
+    </div>
+
+    <form id="profile-form" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+        <!-- Hidden File Input -->
+        <input type="file" id="profileImageInput" name="Input.ProfileImage" accept="image/*" style="display: none;" />
+
+        <div class="row g-3">
+            <!-- Full Name -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Input.Name" class="form-label">
+                        <i class="fas fa-user"></i> Full Name
+                    </label>
+                    <input asp-for="Input.Name" class="form-control form-control-lg" placeholder="Enter your full name" />
+                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Input.PhoneNumber" class="form-label">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    <input asp-for="Input.PhoneNumber" class="form-control form-control-lg" placeholder="Enter your phone number" />
+                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Email (Read-only) -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <input value="@Model.Email" class="form-control form-control-lg" disabled />
+                    <small class="text-muted">
+                        <a asp-page="./Email" class="text-decoration-none">Change email</a>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Username (Read-only) -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-at"></i> Username
+                    </label>
+                    <input value="@Model.Username" class="form-control form-control-lg" disabled />
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="Input.Address" class="form-label">
+                        <i class="fas fa-map-marker-alt"></i> Address
+                    </label>
+                    <textarea asp-for="Input.Address" class="form-control form-control-lg" rows="3" placeholder="Enter your address"></textarea>
+                    <span asp-validation-for="Input.Address" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Profile Image Preview
+        document.getElementById('profileImageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 }

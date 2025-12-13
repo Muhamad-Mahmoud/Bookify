@@ -28,14 +28,37 @@ namespace Bookify.BL.Services
             return (decimal)days * roomType.BasePrice;
         }
 
+        private async Task<Room?> FindAvailableRoomAsync(int roomTypeId, DateTime checkIn, DateTime checkOut)
+        {
+            // Get all rooms
+            var rooms = await _unitOfWork.Rooms.GetAllAsync(r => r.RoomTypeId == roomTypeId);
+            var roomIds = rooms.Select(r => r.Id).ToList();
+
+            // Find overlapping reservations for this room type
+            var overlappingReservations = await _unitOfWork.Reservations.GetAllAsync(
+                r => r.Status != ReservationStatus.Cancelled
+                     && r.CheckInDate < checkOut
+                     && r.CheckOutDate > checkIn
+                     && r.RoomReserved.Any(rr => rr.Room.RoomTypeId == roomTypeId),
+                includeProperties: "RoomReserved"
+            );
+
+            // Identify booked room IDs
+            var bookedRoomIds = overlappingReservations
+                .SelectMany(r => r.RoomReserved)
+                .Select(rr => rr.RoomId)
+                .ToHashSet();
+
+            // Return the first room that is not booked
+            return rooms.FirstOrDefault(r => !bookedRoomIds.Contains(r.Id));
+        }
+
         public async Task<int> CreateReservationAsync(string userId, int roomTypeId, DateTime checkInDate, DateTime checkOutDate)
         {
             // Find available room
             var availableRoom = await FindAvailableRoomAsync(roomTypeId, checkInDate, checkOutDate);
 
-            // Fetch RoomType to get HotelId
             var roomType = await _unitOfWork.RoomTypes.GetAsync(roomTypeId);
-            if (roomType == null) throw new InvalidOperationException("Room Type not found");
 
             // Calculate total price
             var totalPrice = await CalculatePrice(roomTypeId, checkInDate, checkOutDate);
@@ -57,44 +80,18 @@ namespace Bookify.BL.Services
             await _unitOfWork.Reservations.AddAsync(reservation);
             await _unitOfWork.SaveAsync();
 
-            // Create ReservedRoom entry
+            // Create ReservedRoom
             var reservedRoom = new ReservedRoom
             {
                 RoomId = availableRoom.Id,
                 ReservationId = reservation.Id
             };
 
-            // Save changes
             await _unitOfWork.reservedRooms.AddAsync(reservedRoom);
             await _unitOfWork.SaveAsync();
 
-            // Return reservation.Id
+
             return reservation.Id;
-        }
-
-        private async Task<Room?> FindAvailableRoomAsync(int roomTypeId, DateTime checkIn, DateTime checkOut)
-        {
-            // Get all rooms of the requested type
-            var rooms = await _unitOfWork.Rooms.GetAllAsync(r => r.RoomTypeId == roomTypeId);
-            var roomIds = rooms.Select(r => r.Id).ToList();
-
-            // Find overlapping reservations
-            var overlappingReservations = await _unitOfWork.Reservations.GetAllAsync(
-                r => r.Status != ReservationStatus.Cancelled
-                     && r.CheckInDate < checkOut
-                     && r.CheckOutDate > checkIn
-                     && r.RoomReserved.Any(rr => roomIds.Contains(rr.RoomId)),
-                includeProperties: "RoomReserved"
-            );
-
-            // Identify booked room IDs
-            var bookedRoomIds = overlappingReservations
-                .SelectMany(r => r.RoomReserved)
-                .Select(rr => rr.RoomId)
-                .ToHashSet();
-
-            // Return the first room that is not booked
-            return rooms.FirstOrDefault(r => !bookedRoomIds.Contains(r.Id));
         }
 
         public async Task<bool> ConfirmReservationAsync(int reservationId, string paymentIntentId)
@@ -109,17 +106,9 @@ namespace Bookify.BL.Services
             reservation.PaymentMethod = "Stripe";
 
             // Update Room Status to Occupied
-            if (reservation.RoomReserved != null)
-            {
-                foreach (var rr in reservation.RoomReserved)
-                {
-                    if (rr.Room != null)
-                    {
-                        rr.Room.Status = RoomStatus.Occupied;
-                        _unitOfWork.Rooms.Update(rr.Room);
-                    }
-                }
-            }
+                // Removed updating Room Status to Occupied
+                // Room status should reflect physical availability (e.g., Maintenance), not booking status.
+                // Booking availability is handled by checking overlapping reservations.
 
             // Create Invoice
             var invoice = new Invoice

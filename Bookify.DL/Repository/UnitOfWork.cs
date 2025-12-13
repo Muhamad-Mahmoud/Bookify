@@ -25,6 +25,7 @@ namespace Bookify.DL.Repository
         public IReservedRoomRepository reservedRooms { get;private set; }
         public IRoomImageRepository RoomImages { get; private set; }
         public IHotelImageRepository HotelImages { get; private set; }
+        public IReviewRepository Reviews { get; private set; }
 
         public UnitOfWork(BookifyDbContext dbContext)
         {
@@ -41,6 +42,7 @@ namespace Bookify.DL.Repository
             reservedRooms = new ReservedRoomRepository(_dbContext);
             RoomImages = new RoomImageRepository(_dbContext);
             HotelImages = new HotelImageRepository(_dbContext);
+            Reviews = new ReviewRepository(_dbContext);
         }
 
         public async Task SaveAsync()

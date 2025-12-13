@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 using Bookify.Models.ViewModels;
+using Stripe.Checkout;
 
 namespace Bookify.PL.Areas.Customer.Controllers
 {
@@ -63,15 +64,19 @@ namespace Bookify.PL.Areas.Customer.Controllers
             var domain = Request.Scheme + "://" + Request.Host.Value + "/";
             var session = _paymentService.CreateCheckoutSession(reservation, roomType, domain);
 
-
-
             return Redirect(session.Url);
 
         }
 
-        public async Task<IActionResult> Confirmation(int reservationId)
+        public async Task<IActionResult> Confirmation(int reservationId, string sessionId)
         {
-            await _reservationService.ConfirmReservationAsync(reservationId, "Stripe_Session");
+            var sessionService = new SessionService();
+            var session = sessionService.Get(sessionId);
+
+            var paymentIntentId = session.PaymentIntentId;
+
+
+            await _reservationService.ConfirmReservationAsync(reservationId, paymentIntentId);
             return View(reservationId);
         }
 

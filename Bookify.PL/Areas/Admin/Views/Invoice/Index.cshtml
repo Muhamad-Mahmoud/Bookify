@@ -19,6 +19,7 @@
                         <th>Hotel</th>
                         <th>Customer</th>
                         <th>Reservation ID</th>
+                        <th>PaymentIntentId</th>
                         <th>Amount</th>
                         <th>Issued At</th>
                         <th>Paid At</th>
@@ -37,6 +38,7 @@
                             </td>
                             <td>@item.Customer?.Name</td>
                             <td>@item.ReservationId</td>
+                            <td>@item.PaymentIntentId</td>
                             <td>@item.InvoiceAmount.ToString("C")</td>
                             <td>@item.IssuedAt.ToShortDateString()</td>
                             <td>@(item.PaidAt.HasValue ? item.PaidAt.Value.ToShortDateString() : "-")</td>

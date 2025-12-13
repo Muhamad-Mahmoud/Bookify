@@ -36,11 +36,11 @@
     else
     {
         <!-- Main Layout Version - Enhanced for New Navbar -->
-        <a class="nav-user-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="@UserManager.GetUserName(User)">
+        <a class="nav-user-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="@user?.Name">
             <div style="width: 32px; height: 32px; background: var(--color-primary); color: var(--color-black); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">
                 @userInitial
             </div>
-            <span>@UserManager.GetUserName(User)</span>
+            <span>@user?.Name</span>
         </a>
         <form id="logoutForm" style="display: inline;" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
             <button id="logout" type="submit" class="nav-icon-btn" title="Logout" style="border: none; cursor: pointer;">

@@ -29,12 +29,12 @@ namespace Bookify.PL.Areas.Admin.Controllers
             IEnumerable<Room> Rooms;
             if (User.IsInRole(SD.Admin_Role))
             {
-                Rooms = await _roomService.GetAllRoomsAsync(includeProperties: "RoomType");
+                Rooms = await _roomService.GetAllRoomsAsync(includeProperties: "RoomType.Hotel");
             }
             else
             {
                 var userId = GetUserId();
-                Rooms = await _roomService.GetAllRoomsAsync(r => r.RoomType.Hotel.OwnerId == userId, includeProperties: "RoomType");
+                Rooms = await _roomService.GetAllRoomsAsync(r => r.RoomType.Hotel.OwnerId == userId, includeProperties: "RoomType.Hotel");
             }
             return View(Rooms);
         }

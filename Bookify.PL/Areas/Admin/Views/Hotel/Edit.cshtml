@@ -107,6 +107,7 @@
                 <input type="hidden" asp-for="hotel.UserRating" />
                 <input type="hidden" asp-for="hotel.ReviewCount" />
                 <input type="hidden" asp-for="hotel.BookingCount" />
+                <input type="hidden" asp-for="hotel.MainImage" />
 
                 <!-- Main Image -->
                 <div class="form-group mb-3">
@@ -148,6 +149,20 @@
                         Gallery Images (Optional)
                     </label>
                     <small class="text-muted d-block mb-2">Select multiple images to add to the hotel gallery</small>
+
+                    @if (Model.hotel.GalleryImages != null && Model.hotel.GalleryImages.Count > 0)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Current Gallery Images:</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                @foreach (var img in Model.hotel.GalleryImages)
+                                {
+                                    <img src="@img.ImageUrl" alt="Gallery Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;" />
+                                }
+                            </div>
+                            <small class="text-warning mt-1 d-block"><i class="fas fa-exclamation-triangle"></i> Uploading new gallery images will replace all existing ones.</small>
+                        </div>
+                    }
 
                     <input type="file"
                            id="GalleryImages"

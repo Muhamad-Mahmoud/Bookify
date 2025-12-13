@@ -1,0 +1,91 @@
+@model List<(Customer User, IList<string> Roles)>
+
+<link rel="stylesheet" href="~/css/admin-tables.css" />
+
+<div class="dashboard-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-users"></i> User Management
+        </h1>
+    </div>
+
+    <!-- Users Table -->
+    <div class="hotels-table-container">
+        @if (Model.Any())
+        {
+            <table class="table hotels-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Roles</th>
+                        <th>Email Confirmed</th>
+                        <th class="text-center" style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="hotel-name">@item.User.Name</span>
+                            </td>
+                            <td>@item.User.Email</td>
+                            <td>@item.User.PhoneNumber</td>
+                            <td>
+                                @if (item.Roles.Any())
+                                {
+                                    foreach (var role in item.Roles)
+                                    {
+                                        var badgeClass = role == "Admin" ? "role-admin" :
+                                                        role == "Owner" ? "role-owner" :
+                                                        "role-customer";
+                                        <span class="status-badge @badgeClass">@role</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-pending">No Role</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (item.User.EmailConfirmed)
+                                {
+                                    <span class="status-badge status-approved">
+                                        <i class="fas fa-check"></i> Confirmed
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-pending">
+                                        <i class="fas fa-clock"></i> Pending
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="action-buttons">
+                                    <a asp-controller="User"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.User.Id"
+                                       class="btn-sm-custom btn-delete"
+                                       title="Delete User">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-hotels-message">
+                <i class="fas fa-inbox"></i>
+                <p>No users found.</p>
+            </div>
+        }
+    </div>
+</div>

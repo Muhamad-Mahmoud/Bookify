@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Bookify.Models;
+using Bookify.DL.Repository.IRepository;
 
 namespace Bookify.Areas.Identity.Pages.Account.Manage
 {
@@ -17,60 +18,76 @@ namespace Bookify.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<Customer> _userManager;
         private readonly SignInManager<Customer> _signInManager;
+        private readonly IWebHostEnvironment _environment;
+        private readonly IUnitOfWork _unitOfWork;
 
         public IndexModel(
             UserManager<Customer> userManager,
-            SignInManager<Customer> signInManager)
+            SignInManager<Customer> signInManager,
+            IWebHostEnvironment environment,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _environment = environment;
+            _unitOfWork = unitOfWork;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string Username { get; set; }
+        public string Email { get; set; }
+        public string ProfileImageUrl { get; set; }
+        public int ReservationCount { get; set; }
+        public int ReviewCount { get; set; }
+        public int FavoriteCount { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+            [Required]
+            [Display(Name = "Full Name")]
+            public string Name { get; set; }
+
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Phone Number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Address")]
+            [StringLength(200)]
+            public string Address { get; set; }
+
+            [Display(Name = "Profile Image")]
+            public IFormFile ProfileImage { get; set; }
         }
 
         private async Task LoadAsync(Customer user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
+            var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
+            Email = email;
+            ProfileImageUrl = user.PersonalImgUrl ?? "/images/default-avatar.png";
+            
+            // Fetch real stats
+            var reservations = await _unitOfWork.Reservations.GetAllAsync(r => r.CustomerId == user.Id);
+            ReservationCount = reservations.Count();
+
+            var reviews = await _unitOfWork.Reviews.GetAllAsync(r => r.CustomerId == user.Id);
+            ReviewCount = reviews.Count();
+            
+            FavoriteCount = 0; // Feature implementation coming soon
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                Name = user.Name,
+                PhoneNumber = phoneNumber,
+                Address = user.Address
             };
         }
 
@@ -100,19 +117,56 @@ namespace Bookify.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
+            // Update Name
+            if (Input.Name != user.Name)
+            {
+                user.Name = Input.Name;
+            }
+
+            // Update Phone
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "Error: Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
             }
 
+            // Update Address
+            if (Input.Address != user.Address)
+            {
+                user.Address = Input.Address;
+            }
+
+            // Upload Profile Image
+            if (Input.ProfileImage != null)
+            {
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "images", "profiles");
+                Directory.CreateDirectory(uploadsFolder);
+                
+                var uniqueFileName = $"{user.Id}_{Guid.NewGuid()}{Path.GetExtension(Input.ProfileImage.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await Input.ProfileImage.CopyToAsync(fileStream);
+                }
+
+                user.PersonalImgUrl = $"/images/profiles/{uniqueFileName}";
+            }
+
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                StatusMessage = "Error: Unexpected error when trying to update profile.";
+                return RedirectToPage();
+            }
+
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Your profile has been updated successfully!";
             return RedirectToPage();
         }
     }

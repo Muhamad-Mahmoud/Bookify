@@ -19,6 +19,7 @@ namespace Bookify.DL.Repository.IRepository
         public IReservedRoomRepository reservedRooms { get; }
         public IRoomImageRepository RoomImages { get; }
         public IHotelImageRepository HotelImages { get; }
+        public IReviewRepository Reviews { get; }
 
         public Task SaveAsync();
     }

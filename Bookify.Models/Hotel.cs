@@ -60,6 +60,9 @@ namespace Bookify.Models
         [ValidateNever]
         public ICollection<HotelImage> GalleryImages { get; set; } = new List<HotelImage>();
 
+        [ValidateNever]
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
         public string? OwnerId { get; set; }
         [ForeignKey(nameof(OwnerId))]
         [ValidateNever]

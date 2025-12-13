@@ -32,10 +32,7 @@
                                 <span class="hotel-id-badge">@item.Id</span>
                             </td>
                             <td>
-                                @if(item.Reservation?.RoomReserved != null && item.Reservation.RoomReserved.Any())
-                                {
-                                    <span class="fw-bold">@item.Reservation.RoomReserved.First().Room?.RoomType?.Hotel?.Name</span>
-                                }
+                                <span class="fw-bold">@item.Hotel?.Name</span>
                             </td>
                             <td>@item.Customer?.Name</td>
                             <td>@item.ReservationId</td>

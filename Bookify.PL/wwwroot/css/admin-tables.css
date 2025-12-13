@@ -170,6 +170,22 @@
     color: #721c24;
 }
 
+/* Role Badge Styles */
+.role-admin {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.role-owner {
+    background-color: #fff3cd;
+    color: #997404;
+}
+
+.role-customer {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
 /* Action Buttons Container */
 .action-buttons {
     display: flex;
@@ -291,25 +307,102 @@
         font-size: 1.5rem;
     }
 
+    /* Make tables horizontally scrollable on mobile */
+    .hotels-table-container,
+    .data-table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
     .hotels-table,
     .data-table {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        min-width: 800px;
+        /* Ensure table doesn't collapse */
+    }
+
+    .hotels-table thead th,
+    .data-table thead th {
+        padding: 10px 8px;
+        font-size: 0.75rem;
+    }
+
+    .hotels-table tbody td,
+    .data-table tbody td {
+        padding: 10px 8px;
+        font-size: 0.85rem;
+    }
+
+    /* Stack action buttons vertically on very small screens */
+    .action-buttons {
+        flex-direction: column;
+        gap: 4px;
+        align-items: stretch;
+    }
+
+    .btn-sm-custom,
+    .btn-action {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Reduce badge sizes */
+    .status-badge,
+    .hotel-id-badge,
+    .data-id-badge {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+
+    /* Make primary action button full width on mobile */
+    .add-hotel-btn,
+    .btn-primary-action {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Extra small devices (phones in portrait mode) */
+@media (max-width: 480px) {
+    .dashboard-page {
+        padding: 10px;
+    }
+
+    .page-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .hotels-table,
+    .data-table {
+        font-size: 0.8rem;
+        min-width: 700px;
     }
 
     .hotels-table thead th,
     .data-table thead th,
     .hotels-table tbody td,
     .data-table tbody td {
-        padding: 10px;
-    }
-
-    .action-buttons {
-        gap: 4px;
+        padding: 8px 6px;
     }
 
     .btn-sm-custom,
     .btn-action {
-        padding: 5px 10px;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
+        padding: 6px 8px;
+    }
+}
+
+/* Tablet and larger screens - optimize button layout */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .action-buttons {
+        gap: 5px;
+    }
+
+    .btn-sm-custom,
+    .btn-action {
+        padding: 6px 10px;
+        font-size: 0.8rem;
     }
 }

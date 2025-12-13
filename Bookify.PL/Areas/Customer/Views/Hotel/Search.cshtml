@@ -36,126 +36,154 @@
         <partial name="_SearchBoxPartial" />
     </div>
 
-    <div class="container">
-        <div class="row">
-            <!-- Sidebar Filters (Optional placeholder for now) -->
-            <div class="col-lg-3 d-none d-lg-block">
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Filter by</h5>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Star Rating</label>
-                            <div class="d-flex flex-column gap-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="star5">
-                                    <label class="form-check-label" for="star5">5 Stars</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="star4">
-                                    <label class="form-check-label" for="star4">4 Stars</label>
+
+    <form id="filterForm" method="get" asp-action="Search" asp-controller="Hotel" asp-area="Customer">
+        <!-- Preserve Search Params -->
+        <input type="hidden" name="location" value="@Model.Location" />
+        <input type="hidden" name="checkInDate" value="@Model.CheckInDate.ToString("yyyy-MM-dd")" />
+        <input type="hidden" name="checkOutDate" value="@Model.CheckOutDate.ToString("yyyy-MM-dd")" />
+        <input type="hidden" name="guestCount" value="@Model.GuestCount" />
+
+        <div class="container">
+            <div class="row">
+                <!-- Sidebar Filters -->
+                <div class="col-lg-3 d-none d-lg-block">
+                    <div class="card shadow-sm border-0 mb-4 sticky-top" style="top: 20px; z-index: 1;">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-4">Filter by</h5>
+                            
+                            <!-- Star Rating Filter -->
+                            <div class="filter-section mb-4">
+                                <h6 class="fw-bold mb-3">Star Rating</h6>
+                                <div class="d-flex flex-column gap-2">
+                                    @for (int i = 5; i >= 1; i--)
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-check-input filter-trigger" type="checkbox" name="stars" value="@i" id="star@(i)" 
+                                                @(Model.SelectedStars.Contains(i) ? "checked" : "")>
+                                            <label class="form-check-label d-flex align-items-center gap-1" for="star@(i)">
+                                                @i Stars 
+                                                <span class="text-warning ms-1">
+                                                    @for(int k=0; k<i; k++) { <i class="fas fa-star" style="font-size: 10px;"></i> }
+                                                </span>
+                                            </label>
+                                        </div>
+                                    }
                                 </div>
                             </div>
+
+                            <!-- Reset Button -->
+                            <a href="@Url.Action("Search", "Hotel", new { area = "Customer", location = Model.Location, checkInDate = Model.CheckInDate, checkOutDate = Model.CheckOutDate, guestCount = Model.GuestCount })" class="btn btn-outline-dark w-100 btn-sm rounded-pill">Reset Filters</a>
                         </div>
                     </div>
                 </div>
-                
-            </div>
 
-            <!-- Results List -->
-            <div class="col-lg-9">
-                <!-- Top Filter Bar -->
-                <div class="filter-bar">
-                    <button class="filter-btn active">Recommended</button>
-                    <button class="filter-btn">Price <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></button>
-                    <button class="filter-btn">Guest Rating <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></button>
-                    <button class="filter-btn">Distance <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></button>
-                    <button class="filter-btn">Stars <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></button>
-                </div>
+                <!-- Results List -->
+                <div class="col-lg-9">
+                    <!-- Top Filter Bar (Sorting Removed) -->
+                    <!-- <div class="filter-bar ..."> ... </div> -->
 
-                @if (Model.Hotels != null && Model.Hotels.Any())
-                {
-                    @foreach (var hotel in Model.Hotels)
+                    @if (Model.Hotels != null && Model.Hotels.Any())
                     {
-                        var minPrice = hotel.RoomTypes.Any() ? hotel.RoomTypes.Min(rt => rt.BasePrice) : 0;
-                        
-                        <div class="hotel-search-card">
-                            <!-- Image Column -->
-                            <div class="hotel-card-image">
-                                <img src="@(string.IsNullOrEmpty(hotel.MainImage) ? "/images/placeholder-hotel.jpg" : hotel.MainImage)" alt="@hotel.Name">
-                                <button class="card-wishlist-btn" aria-label="Add to wishlist">
-                                    <i class="far fa-heart"></i>
-                                </button>
-                            </div>
+                        @foreach (var hotel in Model.Hotels)
+                        {
+                            var minPrice = hotel.RoomTypes.Any() ? hotel.RoomTypes.Min(rt => rt.BasePrice) : 0;
+                            
+                            <div class="hotel-search-card">
+                                <!-- Image Column -->
+                                <div class="hotel-card-image">
+                                    <img src="@(string.IsNullOrEmpty(hotel.MainImage) ? "/images/placeholder-hotel.jpg" : hotel.MainImage)" alt="@hotel.Name">
+                                    <button class="card-wishlist-btn" aria-label="Add to wishlist">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
 
-                            <!-- Details Column -->
-                            <div class="hotel-card-details">
-                                <div class="hotel-card-header">
-                                    <div>
-                                        <a href="@Url.Action("GetHotel", "Hotel", new { id = hotel.Id, checkInDate = Model.CheckInDate.ToString("yyyy-MM-dd"), checkOutDate = Model.CheckOutDate.ToString("yyyy-MM-dd"), guestCount = Model.GuestCount })" class="hotel-name">
-                                            @hotel.Name
-                                        </a>
-                                        <div class="hotel-stars">
-                                            @for (int i = 0; i < hotel.StarRating; i++)
+                                <!-- Details Column -->
+                                <div class="hotel-card-details">
+                                    <div class="hotel-card-header">
+                                        <div>
+                                            <a href="@Url.Action("GetHotel", "Hotel", new { id = hotel.Id, checkInDate = Model.CheckInDate.ToString("yyyy-MM-dd"), checkOutDate = Model.CheckOutDate.ToString("yyyy-MM-dd"), guestCount = Model.GuestCount })" class="hotel-name">
+                                                @hotel.Name
+                                            </a>
+                                            <div class="hotel-stars">
+                                            @{
+                                                int userStars = (int)Math.Round(hotel.UserRating);
+                                            }
+                                            @for (int i = 0; i < userStars; i++)
                                             {
                                                 <i class="fas fa-star"></i>
                                             }
-                                            <span class="text-muted ms-2" style="font-size: 0.8rem;">Hotel</span>
+                                            @for (int i = userStars; i < 5; i++)
+                                            {
+                                                <i class="far fa-star text-muted"></i>
+                                            }
+                                            <span class="text-muted ms-2" style="font-size: 0.8rem;">(@hotel.UserRating.ToString("0.0"))</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="hotel-location">
-                                    <i class="fas fa-map-marker-alt text-primary"></i>
-                                    <span>@hotel.Address, @hotel.City?.Name</span>
-                                    <a href="#" class="ms-2">Show on map</a>
-                                </div>
-
-                                <div class="hotel-description-preview">
-                                    @hotel.Description
-                                </div>
-
-                                <div class="hotel-features">
-                                    <div class="feature-item"><i class="fas fa-check"></i> Free cancellation</div>
-                                    <div class="feature-item"><i class="fas fa-check"></i> No prepayment needed</div>
-                                    <div class="feature-item"><i class="fas fa-check"></i> Breakfast included</div>
-                                </div>
-                            </div>
-
-                            <!-- Pricing Column -->
-                            <div class="hotel-card-pricing">
-                                <div class="review-badge">
-                                    <div class="text-end">
-                                        <div class="review-text">@(hotel.UserRating >= 9 ? "Excellent" : hotel.UserRating >= 8 ? "Very Good" : "Good")</div>
-                                        <div class="review-count">@hotel.ReviewCount reviews</div>
+                                    <div class="hotel-location">
+                                        <i class="fas fa-map-marker-alt text-primary"></i>
+                                        <span>@hotel.Address, @hotel.City?.Name</span>
+                                        <a href="#" class="ms-2">Show on map</a>
                                     </div>
-                                    <div class="review-score">@hotel.UserRating.ToString("0.0")</div>
+
+                                    <div class="hotel-description-preview">
+                                        @hotel.Description
+                                    </div>
+
+                                    <div class="hotel-features">
+                                        <div class="feature-item"><i class="fas fa-check"></i> Free cancellation</div>
+                                        <div class="feature-item"><i class="fas fa-check"></i> No prepayment needed</div>
+                                        <div class="feature-item"><i class="fas fa-check"></i> Breakfast included</div>
+                                    </div>
                                 </div>
 
-                                <div class="price-section">
-                                    <div class="price-label">1 night, @Model.GuestCount adults</div>
-                                    <div class="price-amount">EGP @minPrice.ToString("N0")</div>
-                                    <div class="price-taxes">+EGP @((minPrice * 0.14m).ToString("N0")) taxes and charges</div>
-                                    
-                                    <a href="@Url.Action("GetHotel", "Hotel", new { id = hotel.Id, checkInDate = Model.CheckInDate.ToString("yyyy-MM-dd"), checkOutDate = Model.CheckOutDate.ToString("yyyy-MM-dd"), guestCount = Model.GuestCount })" class="btn-view-deal">
-                                        See Availability <i class="fas fa-chevron-right"></i>
-                                    </a>
+                                <!-- Pricing Column -->
+                                <div class="hotel-card-pricing">
+                                    <div class="review-badge">
+                                        <div class="text-end">
+                                            <div class="review-text">@(hotel.UserRating >= 9 ? "Excellent" : hotel.UserRating >= 8 ? "Very Good" : "Good")</div>
+                                            <div class="review-count">@hotel.ReviewCount reviews</div>
+                                        </div>
+                                        <div class="review-score">@hotel.UserRating.ToString("0.0")</div>
+                                    </div>
+
+                                    <div class="price-section">
+                                        <div class="price-label">1 night, @Model.GuestCount adults</div>
+                                        <div class="price-amount">EGP @minPrice.ToString("N0")</div>
+                                        <div class="price-taxes">+EGP @((minPrice * 0.14m).ToString("N0")) taxes and charges</div>
+                                        
+                                        <a href="@Url.Action("GetHotel", "Hotel", new { id = hotel.Id, checkInDate = Model.CheckInDate.ToString("yyyy-MM-dd"), checkOutDate = Model.CheckOutDate.ToString("yyyy-MM-dd"), guestCount = Model.GuestCount })" class="btn-view-deal">
+                                            See Availability <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <div class="mb-3 text-muted">
+                                <i class="fas fa-search fa-3x"></i>
+                            </div>
+                            <h3>No hotels found</h3>
+                            <p class="text-muted">We couldn't find any properties matching your search criteria.</p>
+                            <a href="@Url.Action("Search", "Hotel", new { area = "Customer", location = Model.Location, checkInDate = Model.CheckInDate, checkOutDate = Model.CheckOutDate, guestCount = Model.GuestCount })" class="btn btn-primary mt-3">Reset Filters</a>
                         </div>
                     }
-                }
-                else
-                {
-                    <div class="text-center py-5">
-                        <div class="mb-3 text-muted">
-                            <i class="fas fa-search fa-3x"></i>
-                        </div>
-                        <h3>No hotels found</h3>
-                        <p class="text-muted">We couldn't find any properties matching your search criteria.</p>
-                        <a href="/" class="btn btn-primary mt-3">Search Again</a>
-                    </div>
-                }
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
+
+<script>
+    // Auto-submit on filter change
+    document.querySelectorAll('.filter-trigger').forEach(item => {
+        item.addEventListener('change', event => {
+            document.getElementById('filterForm').submit();
+        });
+    });
+</script>
